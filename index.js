@@ -110,6 +110,9 @@ async function iniciarBot() {
 
         const mensaje = messages[0]
 
+        console.log("MENSAJE RECIBIDO:")
+        console.log(JSON.stringify(mensaje, null, 2))
+        
         if (!mensaje.message) return
 
         const texto =
