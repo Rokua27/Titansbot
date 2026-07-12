@@ -1,0 +1,9 @@
+{
+  "name": "titansbot",
+  "version": "1.0.0",
+  "description": "Bot de WhatsApp para Liga Titans Team",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  }
+}
