@@ -12,44 +12,49 @@ const pino = require("pino")
 const PORT = process.env.PORT || 10000
 let qrImage = null
 
-// ================== SERVIDOR HTTP ==================
+// ================= SERVIDOR HTTP =================
 
-const server = http.createServer(async (req, res) => {
+http.createServer((req, res) => {
 
     if (req.url === "/qr") {
 
-        if (qrImage) {
-            res.writeHead(200, { "Content-Type": "text/html" })
+        res.writeHead(200, {
+            "Content-Type": "text/html"
+        })
 
+        if (qrImage) {
             res.end(`
                 <html>
                     <head>
                         <title>TitansBot QR</title>
                     </head>
-                    <body style="text-align:center;font-family:Arial;padding-top:30px">
-                        <h1>Escanea este QR con WhatsApp Business</h1>
+                    <body style="font-family:Arial;text-align:center;padding-top:40px;">
+                        <h1>Escanea el QR con WhatsApp Business</h1>
                         <img src="${qrImage}" width="350"/>
                     </body>
                 </html>
             `)
-
         } else {
-            res.writeHead(200, { "Content-Type": "text/html" })
-            res.end("<h1>TitansBot ya está conectado a WhatsApp.</h1>")
+            res.end(`
+                <html>
+                    <body style="font-family:Arial;text-align:center;padding-top:40px;">
+                        <h2>✅ TitansBot ya está conectado a WhatsApp</h2>
+                    </body>
+                </html>
+            `)
         }
 
         return
     }
 
-    res.writeHead(200, { "Content-Type": "text/plain" })
-    res.end("TitansBot funcionando correctamente")
-})
+    res.writeHead(200)
+    res.end("TitansBot activo")
 
-server.listen(PORT, () => {
+}).listen(PORT, () => {
     console.log(`🌐 Servidor HTTP iniciado en puerto ${PORT}`)
 })
 
-// ================== BOT ==================
+// ================= BOT =================
 
 async function iniciarBot() {
 
@@ -75,11 +80,11 @@ async function iniciarBot() {
             qrImage = await QRCode.toDataURL(qr)
 
             console.log("")
-            console.log("================================")
+            console.log("====================================")
             console.log("QR generado correctamente")
             console.log("Abre:")
             console.log("https://titansbot.onrender.com/qr")
-            console.log("================================")
+            console.log("====================================")
             console.log("")
         }
 
@@ -94,94 +99,150 @@ async function iniciarBot() {
 
         if (connection === "close") {
 
-            const reason = lastDisconnect?.error?.output?.statusCode
+            const reason =
+                lastDisconnect?.error?.output?.statusCode
 
             console.log(`❌ Conexión cerrada: ${reason}`)
 
             if (reason !== DisconnectReason.loggedOut) {
-                setTimeout(() => iniciarBot(), 5000)
+                setTimeout(() => {
+                    iniciarBot()
+                }, 5000)
             }
         }
     })
 
-    // ================== COMANDOS ==================
+    // ================= COMANDOS =================
 
     sock.ev.on("messages.upsert", async ({ messages }) => {
 
-        const mensaje = messages[0]
+        try {
 
-        console.log("MENSAJE RECIBIDO:")
-        console.log(JSON.stringify(mensaje, null, 2))
-        
-        if (!mensaje.message) return
+            const mensaje = messages[0]
 
-        const texto =
-            mensaje.message.conversation ||
-            mensaje.message.extendedTextMessage?.text ||
-            ""
+            if (!mensaje.message) return
+            if (mensaje.key.fromMe) return
 
-        const comando = texto.toLowerCase().trim()
-        const chat = mensaje.key.remoteJid
+            const texto =
+                mensaje.message.conversation ||
+                mensaje.message.extendedTextMessage?.text ||
+                ""
 
-        // PING
-        if (comando === "ping") {
-            await sock.sendMessage(chat, {
-                text: "🏓 Pong! TitansBot está funcionando correctamente."
-            })
-        }
+            const comando = texto.toLowerCase().trim()
 
-        // MENU
-        if (comando === "menu") {
-            await sock.sendMessage(chat, {
-                text:
+            if (!comando.startsWith("/")) return
+
+            const chat = mensaje.key.remoteJid
+
+            // /PING
+            if (comando === "/ping") {
+
+                await sock.sendMessage(chat, {
+                    text: "🏓 Pong! TitansBot está funcionando correctamente."
+                })
+            }
+
+            // /MENU
+            if (comando === "/menu") {
+
+                await sock.sendMessage(chat, {
+                    text:
 `🏆 *TITANSBOT - LIGA TITANS TEAM* 🏆
 
-📋 Comandos disponibles:
+📋 *Comandos disponibles*
 
-🏓 ping
-📜 menu
-🏆 liga
-📖 reglas
-📞 contacto`
-            })
-        }
+🏓 /ping
+📜 /menu
+🏆 /liga
+📖 /reglas
+📞 /contacto
 
-        // LIGA
-        if (comando === "liga") {
-            await sock.sendMessage(chat, {
-                text:
+🔥 Próximamente:
+📊 /tabla
+📅 /horarios
+📝 /inscripciones`
+                })
+            }
+
+            // /LIGA
+            if (comando === "/liga") {
+
+                await sock.sendMessage(chat, {
+                    text:
 `🏆 *Liga Titans Team*
 
 🎮 Liga competitiva de Mobile Legends.
-⚔️ Torneos BO1, BO3 y BO5.
+⚔️ Formatos BO1, BO3 y BO5.
 🌎 Comunidad competitiva organizada.
 
 👑 Director:
-David Rivera`
-            })
-        }
+`
+                })
+            }
 
-        // REGLAS
-        if (comando === "reglas") {
-            await sock.sendMessage(chat, {
-                text:
-`📖 *Reglas básicas*
+            // /REGLAS
+            if (comando === "/reglas") {
+
+                await sock.sendMessage(chat, {
+                    text:
+`📖 *Reglas Generales*
 
 ✅ Respeto entre jugadores.
 ✅ Puntualidad en los horarios.
 ✅ Prohibido el uso de hacks.
-✅ Respetar las decisiones arbitrales.`
-            })
-        }
+✅ Respetar las decisiones arbitrales.
+✅ Mantener un comportamiento deportivo.`
+                })
+            }
 
-        // CONTACTO
-        if (comando === "contacto") {
-            await sock.sendMessage(chat, {
-                text:
+            // /CONTACTO
+            if (comando === "/contacto") {
+
+                await sock.sendMessage(chat, {
+                    text:
 `📞 *Contacto Liga Titans Team*
 
 Para soporte o dudas comunícate con la administración de la liga.`
-            })
+                })
+            }
+
+        } catch (error) {
+
+            console.log("Error procesando mensaje:")
+            console.log(error)
+        }
+    })
+
+    // ================= BIENVENIDA =================
+
+    sock.ev.on("group-participants.update", async (data) => {
+
+        try {
+
+            if (data.action === "add") {
+
+                for (const participante of data.participants) {
+
+                    await sock.sendMessage(data.id, {
+                        text:
+`🏆 *Bienvenido a Liga Titans Team* 🏆
+
+👋 Bienvenido @${participante.split("@")[0]}
+
+📜 Escribe */menu* para conocer los comandos disponibles.
+
+⚔️ Respeta las reglas y disfruta del torneo.
+
+🔥 ¡Buena suerte y que gane el mejor equipo!`,
+                        mentions: [participante]
+                    })
+                }
+            }
+
+        } catch (error) {
+
+            console.log("Error en bienvenida:")
+            console.log(error)
         }
     })
 }
