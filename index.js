@@ -1,7 +1,6 @@
 const {
     default: makeWASocket,
-    useMultiFileAuthState,
-    DisconnectReason
+    useMultiFileAuthState
 } = require("@whiskeysockets/baileys")
 
 const pino = require("pino")
@@ -20,28 +19,23 @@ async function iniciarBot() {
 
     sock.ev.on("connection.update", async (update) => {
 
-        const { connection, lastDisconnect } = update
+        const { connection } = update
 
         if (connection === "open") {
             console.log("✅ TitansBot conectado correctamente")
         }
 
         if (!state.creds.registered) {
+            const codigo = await sock.requestPairingCode("573189333079")
 
-        const codigo = await sock.requestPairingCode("573189333079")
-
-        console.log("")
-        console.log("================================")
-        console.log("CODIGO DE VINCULACION:")
-        console.log(codigo)
-        console.log("================================")
-        console.log("")
-    }
-    }
-            }
+            console.log("")
+            console.log("================================")
+            console.log("CÓDIGO DE VINCULACIÓN:")
+            console.log(codigo)
+            console.log("================================")
+            console.log("")
         }
     })
-
 }
 
 iniciarBot()
