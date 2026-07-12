@@ -26,24 +26,9 @@ async function iniciarBot() {
             console.log("✅ TitansBot conectado correctamente")
         }
 
-        if (connection === "close") {
+        if (!state.creds.registered) {
 
-            const shouldReconnect =
-                lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut
-
-            console.log("❌ Conexión cerrada")
-
-            if (shouldReconnect) {
-                iniciarBot()
-            }
-        }
-    })
-
-    if (!state.creds.registered) {
-
-        const numero = "573189333079"
-
-        const codigo = await sock.requestPairingCode(numero)
+        const codigo = await sock.requestPairingCode("573189333079")
 
         console.log("")
         console.log("================================")
@@ -52,6 +37,11 @@ async function iniciarBot() {
         console.log("================================")
         console.log("")
     }
+    }
+            }
+        }
+    })
+
 }
 
 iniciarBot()
