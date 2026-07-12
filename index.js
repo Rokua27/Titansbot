@@ -160,7 +160,6 @@ async function iniciarBot() {
 
 🔥 Próximamente:
 📊 /tabla
-📅 /horarios
 📝 /inscripciones`
                 })
             }
@@ -215,14 +214,12 @@ if (comando === "/horarios") {
 `🏆 *GRAN FINAL - LIGA TITANS TEAM* 🏆
 
 📅 *Domingo*
-🕣 *Hora:* 8:30 PM
+🕣 *Hora:* 9:00 PM
 ⚔️ *Formato:* BO5
 
 🔥 *Equipos Finalistas*
 
-🔵 Nova E-sport
-🆚
-🟠 Atlas E-sport
+🔵 Nova E-sport 🆚 🟠 Atlas E-sport
 
 👑 Solo uno levantará el trofeo de campeón.
 
