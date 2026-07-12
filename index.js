@@ -1,4 +1,5 @@
 const http = require("http")
+const QRCode = require("qrcode")
 const {
     default: makeWASocket,
     useMultiFileAuthState,
@@ -6,16 +7,44 @@ const {
     DisconnectReason
 } = require("@whiskeysockets/baileys")
 
-const qrcode = require("qrcode-terminal")
 const pino = require("pino")
 
 const PORT = process.env.PORT || 10000
 
-http.createServer((req, res) => {
+let qrImage = null
+
+const server = http.createServer(async (req, res) => {
+
+    if (req.url === "/qr") {
+
+        if (qrImage) {
+            res.writeHead(200, { "Content-Type": "text/html" })
+
+            res.end(`
+                <html>
+                <head>
+                    <title>TitansBot QR</title>
+                </head>
+                <body style="text-align:center;font-family:Arial;padding-top:30px">
+                    <h1>Escanea este QR con WhatsApp Business</h1>
+                    <img src="${qrImage}" width="350"/>
+                </body>
+                </html>
+            `)
+        } else {
+            res.writeHead(200, { "Content-Type": "text/html" })
+            res.end("<h1>Esperando generación del QR...</h1>")
+        }
+
+        return
+    }
+
     res.writeHead(200, { "Content-Type": "text/plain" })
     res.end("TitansBot funcionando correctamente")
-}).listen(PORT, () => {
-    console.log(`🌐 Servidor HTTP iniciado en puerto ${PORT}`)
+})
+
+server.listen(PORT, () => {
+    console.log(`🌐 Servidor iniciado en puerto ${PORT}`)
 })
 
 async function iniciarBot() {
@@ -28,7 +57,7 @@ async function iniciarBot() {
         version,
         auth: state,
         logger: pino({ level: "silent" }),
-        printQRInTerminal: true,
+        printQRInTerminal: false,
         browser: ["TitansBot", "Chrome", "1.0.0"]
     })
 
@@ -39,22 +68,23 @@ async function iniciarBot() {
         const { connection, qr, lastDisconnect } = update
 
         if (qr) {
-            console.log("")
-            console.log("================================")
-            console.log("ESCANEA EL QR DESDE WHATSAPP")
-            console.log("================================")
-            qrcode.generate(qr, { small: true })
+            qrImage = await QRCode.toDataURL(qr)
+
+            console.log("✅ QR generado")
+            console.log("Abre:")
+            console.log("https://titansbot.onrender.com/qr")
         }
 
         if (connection === "open") {
             console.log("✅ TitansBot conectado correctamente a WhatsApp")
+            qrImage = null
         }
 
         if (connection === "close") {
 
             const reason = lastDisconnect?.error?.output?.statusCode
 
-            console.log(`❌ Conexión cerrada: ${reason}`)
+            console.log("❌ Conexión cerrada:", reason)
 
             if (reason !== DisconnectReason.loggedOut) {
                 setTimeout(() => iniciarBot(), 5000)
