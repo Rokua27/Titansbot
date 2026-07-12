@@ -1,3 +1,4 @@
+const http = require("http")
 const {
     default: makeWASocket,
     useMultiFileAuthState,
@@ -6,6 +7,15 @@ const {
 } = require("@whiskeysockets/baileys")
 
 const pino = require("pino")
+
+const PORT = process.env.PORT || 10000
+
+http.createServer((req, res) => {
+    res.writeHead(200, { "Content-Type": "text/plain" })
+    res.end("TitansBot funcionando correctamente")
+}).listen(PORT, () => {
+    console.log(`🌐 Servidor HTTP iniciado en puerto ${PORT}`)
+})
 
 async function iniciarBot() {
 
@@ -31,40 +41,34 @@ async function iniciarBot() {
         }
 
         if (connection === "close") {
-
-            const reason =
-                lastDisconnect?.error?.output?.statusCode
+            const reason = lastDisconnect?.error?.output?.statusCode
 
             console.log("❌ Conexión cerrada:", reason)
 
             if (reason !== DisconnectReason.loggedOut) {
-                iniciarBot()
+                setTimeout(() => {
+                    iniciarBot()
+                }, 5000)
             }
         }
     })
 
-    setTimeout(async () => {
-        try {
+    try {
+        if (!state.creds.registered) {
 
-            if (!state.creds.registered) {
+            const codigo = await sock.requestPairingCode("57TU_NUMERO")
 
-                const codigo = await sock.requestPairingCode(
-                    "573189333079"
-                )
-
-                console.log("")
-                console.log("================================")
-                console.log("CODIGO DE VINCULACION:")
-                console.log(codigo)
-                console.log("================================")
-                console.log("")
-            }
-
-        } catch (error) {
-            console.log("Error generando código:")
-            console.log(error)
+            console.log("")
+            console.log("================================")
+            console.log("CODIGO DE VINCULACION:")
+            console.log(codigo)
+            console.log("================================")
+            console.log("")
         }
-    }, 10000)
+    } catch (error) {
+        console.log("Error generando código:")
+        console.log(error)
+    }
 }
 
 iniciarBot()
