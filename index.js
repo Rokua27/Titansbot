@@ -156,6 +156,7 @@ async function iniciarBot() {
 🏆 /liga
 📖 /reglas
 📞 /contacto
+📆 /horarios
 
 🔥 Próximamente:
 📊 /tabla
@@ -206,6 +207,31 @@ Para soporte o dudas comunícate con la administración de la liga.`
                 })
             }
 
+    // /HORARIOS
+if (comando === "/horarios") {
+
+    await sock.sendMessage(chat, {
+        text:
+`🏆 *GRAN FINAL - LIGA TITANS TEAM* 🏆
+
+📅 *Domingo*
+🕣 *Hora:* 8:30 PM
+⚔️ *Formato:* BO5
+
+🔥 *Equipos Finalistas*
+
+🔵 Nova E-sport
+🆚
+🟠 Atlas E-sport
+
+👑 Solo uno levantará el trofeo de campeón.
+
+🎮 ¡No te pierdas la gran final de la temporada!
+
+#LigaTitansTeam`
+    })
+}
+            
         } catch (error) {
 
             console.log("Error procesando mensaje:")
