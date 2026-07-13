@@ -651,6 +651,41 @@ TitansBot v1.0`
     })
 }
 
+// /TOPACTIVOS
+if (comando === "/topactivos") {
+
+    const ranking = Object.entries(actividad)
+        .sort((a, b) => b[1].mensajes - a[1].mensajes)
+        .slice(0, 10)
+
+    if (ranking.length === 0) {
+        return await sock.sendMessage(chat, {
+            text: "📊 Aún no hay actividad registrada."
+        })
+    }
+
+    let respuesta =
+`🏆 *TOP 10 MIEMBROS MÁS ACTIVOS*
+
+`
+
+    ranking.forEach((usuarioData, index) => {
+        const numero = usuarioData[0].split("@")[0]
+        const mensajes = usuarioData[1].mensajes
+
+        respuesta +=
+`${index + 1}. @${numero}
+💬 ${mensajes} mensajes
+
+`
+    })
+
+    await sock.sendMessage(chat, {
+        text: respuesta,
+        mentions: ranking.map(x => x[0])
+    })
+}
+            
 // /EVENTO
 if (comando.startsWith("/evento")) {
 
