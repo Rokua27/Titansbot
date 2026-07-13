@@ -230,7 +230,7 @@ if (comando === "/horarios") {
     })
 }
 
-            // /REDES
+    // /REDES
 if (comando === "/redes") {
     await sock.sendMessage(chat, {
         text:
