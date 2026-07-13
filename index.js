@@ -776,7 +776,13 @@ if (comando.startsWith("/video")) {
 
     if (!busqueda) {
         return await sock.sendMessage(chat, {
-            text: "⚠️ Escribe el nombre del video.\n\nEjemplo:\n/video Mobile Legends M6 Grand Finals
+            text:
+`⚠️ Escribe el nombre del video.
+
+Ejemplo:
+/video Mobile Legends M6 Grand Finals`
+        })
+    }
 
     await sock.sendMessage(chat, {
         text: "🔍 Buscando en YouTube..."
@@ -822,7 +828,7 @@ ${video.url}`
             text: "❌ Ocurrió un error al buscar el video."
         })
     }
-}
+                           }
             
 // ==========================
 // COMANDOS DE DIVERSIÓN
