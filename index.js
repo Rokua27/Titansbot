@@ -137,7 +137,7 @@ async function iniciarBot() {
 // ==========================
 const usuario = mensaje.key.participant || mensaje.key.remoteJid
 console.log("Usuario:", usuario)
-console.log("Mensajes:", contadorSpam[usuario]?.length || 0)3
+console.log("Mensajes:", contadorSpam[usuario]?.length || 0)
 const ahora = Date.now()
 
 if (!contadorSpam[usuario]) {
