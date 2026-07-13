@@ -1663,7 +1663,8 @@ let menu = `
 👤 /perfil
 📊 /topactivos
 📉 /inactivos
-
+⚖️ /roles
+📚 /comandos usuario
 ━━━━━━━━━━━━━━━━━━
 🎵 *MULTIMEDIA*
 ━━━━━━━━━━━━━━━━━━
@@ -1730,6 +1731,10 @@ menu += `
 🔇 /mute
 🔊 /unmute
 🛡️ /admin
+
+🏷️ /rol
+👑 /setrol
+🗑️ /removerrol
 `
 }
 
@@ -1880,7 +1885,155 @@ if (comando === "/staff") {
 🔥 Gracias por formar parte de nuestra comunidad.`
     })
 }
+// /ROLES
+if (comando === "/roles") {
 
+    await sock.sendMessage(chat, {
+        text:
+`╔════════════════════╗
+👑 *JERARQUÍA TITANSBOT*
+🏆 *LIGA TITANS TEAM*
+╚════════════════════╝
+
+👤 Usuario
+🎖️ Árbitro
+🛡️ Moderador
+👑 Director
+🔥 Administrador
+
+━━━━━━━━━━━━━━━━━━
+
+👤 *Usuario*
+Comandos básicos y entretenimiento.
+
+🎖️ *Árbitro*
+Gestión disciplinaria y eventos.
+
+🛡️ *Moderador*
+Control del chat y anuncios.
+
+👑 *Director*
+Gestión completa de torneos y comunidad.
+
+🔥 *Administrador*
+Control total del sistema y asignación de roles.
+
+━━━━━━━━━━━━━━━━━━
+
+Usa:
+
+/comandos usuario
+/comandos arbitro
+/comandos moderador
+/comandos director
+/comandos admin
+
+🤖 TitansBot Oficial`
+    })
+}
+// /COMANDOS
+if (comando.startsWith("/comandos")) {
+
+    const tipo = texto.split(" ")[1]?.toLowerCase()
+
+    if (!tipo) {
+        return await sock.sendMessage(chat,{
+            text:
+`📚 Uso correcto:
+
+/comandos usuario
+/comandos arbitro
+/comandos moderador
+/comandos director
+/comandos admin`
+        })
+    }
+
+    let respuesta = ""
+
+    switch(tipo) {
+
+        case "usuario":
+            respuesta =
+`👤 COMANDOS DE USUARIO
+
+🏓 /ping
+📜 /menu
+👤 /perfil
+🎬 /video
+🎵 /ytmp3
+🎲 /dado
+🪙 /moneda
+🎱 /8ball
+❓ /quien
+💖 /ship
+🐱 /gato
+🐶 /perro
+😂 /meme
+🎌 /anime
+🌸 /waifu
+🌐 /redes
+📖 /reglas
+👑 /staff`
+            break
+
+        case "arbitro":
+            respuesta =
+`🎖️ COMANDOS DE ÁRBITRO
+
+⚠️ /warn
+📋 /advertencias
+📅 /evento
+📊 /encuesta
+⏰ /recordatorio
+
+Incluye todos los comandos de usuario.`
+            break
+
+        case "moderador":
+            respuesta =
+`🛡️ COMANDOS DE MODERADOR
+
+🔇 /mute
+🔊 /unmute
+📢 /anuncio
+📈 /topactivos
+📉 /inactivos
+
+Incluye todos los comandos de árbitro y usuario.`
+            break
+
+        case "director":
+            respuesta =
+`👑 COMANDOS DE DIRECTOR
+
+🔒 /cerrar
+🔓 /abrir
+📢 /anuncioall
+📣 /tagall
+
+Incluye todos los comandos de moderador, árbitro y usuario.`
+            break
+
+        case "admin":
+            respuesta =
+`🔥 COMANDOS DE ADMINISTRADOR
+
+👑 /setrol
+🗑️ /removerrol
+🏷️ /rol
+
+Acceso completo al sistema TitansBot.`
+            break
+
+        default:
+            respuesta = "❌ Rol no reconocido."
+    }
+
+    await sock.sendMessage(chat,{
+        text: respuesta
+    })
+}
     // /CONTACTO
 if (comando === "/contacto") {
     await sock.sendMessage(chat, {
