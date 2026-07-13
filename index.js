@@ -268,6 +268,56 @@ if (comando === "/tagall") {
     })
 }
 
+// /WARN
+if (comando.startsWith("/warn")) {
+
+    if (!esAdmin) {
+        return await sock.sendMessage(chat, {
+            text: "❌ Este comando es exclusivo para administradores."
+        })
+    }
+
+    const mencionado =
+        mensaje.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0]
+
+    if (!mencionado) {
+        return await sock.sendMessage(chat, {
+            text: "⚠️ Debes mencionar un usuario.\n\nEjemplo:\n/warn @usuario Spam excesivo"
+        })
+    }
+
+    const partes = texto.split(" ")
+    const motivo = partes.slice(2).join(" ") || "Sin motivo especificado"
+
+    if (!advertencias[mencionado]) {
+        advertencias[mencionado] = []
+    }
+
+    advertencias[mencionado].push({
+        fecha: new Date().toLocaleString("es-CO"),
+        administrador: usuario,
+        motivo: motivo
+    })
+
+    guardarAdvertencias()
+
+    await sock.sendMessage(chat, {
+        text:
+`⚠️ *ADVERTENCIA REGISTRADA*
+
+👤 Usuario:
+@${mencionado.split("@")[0]}
+
+📝 Motivo:
+${motivo}
+
+📊 Advertencias actuales:
+${advertencias[mencionado].length}/5
+
+La advertencia ha sido almacenada correctamente.`,
+        mentions: [mencionado]
+    })
+}
    // /CERRAR
 if (comando === "/cerrar") {
 
