@@ -774,7 +774,85 @@ Ejemplo:
 🤖 *TitansBot Oficial*`
     })
 }
-                  
+
+// /MUTE
+if (comandoBase === "/mute") {
+
+    if (!esAdmin) {
+        return await sock.sendMessage(chat, {
+            text: "❌ Este comando es exclusivo para administradores."
+        })
+    }
+
+    const partes = texto.split(" ")
+    const minutos = parseInt(partes[1])
+
+    if (isNaN(minutos)) {
+        return await sock.sendMessage(chat, {
+            text:
+`⚠️ Debes indicar la duración.
+
+Ejemplo:
+/mute 30`
+        })
+    }
+
+    await sock.groupSettingUpdate(
+        chat,
+        "announcement"
+    )
+
+    await sock.sendMessage(chat, {
+        text:
+`🔇 *MODO SILENCIO ACTIVADO*
+
+⏳ Duración:
+${minutos} minutos
+
+📢 Solo los administradores podrán enviar mensajes.
+
+🤖 TitansBot reabrirá automáticamente el grupo.`
+    })
+
+    setTimeout(async () => {
+
+        await sock.groupSettingUpdate(
+            chat,
+            "not_announcement"
+        )
+
+        await sock.sendMessage(chat, {
+            text:
+`🔊 *MODO SILENCIO FINALIZADO*
+
+✅ El grupo ha sido reabierto automáticamente.`
+        })
+
+    }, minutos * 60 * 1000)
+}
+
+// /UNMUTE
+if (comandoBase === "/unmute") {
+
+    if (!esAdmin) {
+        return await sock.sendMessage(chat, {
+            text: "❌ Este comando es exclusivo para administradores."
+        })
+    }
+
+    await sock.groupSettingUpdate(
+        chat,
+        "not_announcement"
+    )
+
+    await sock.sendMessage(chat, {
+        text:
+`🔊 *GRUPO REABIERTO*
+
+Todos los miembros pueden volver a enviar mensajes.`
+    })
+}
+                   
             // /MENU
             if (comando === "/menu") {
 
