@@ -157,6 +157,7 @@ async function iniciarBot() {
 📖 /reglas
 📞 /contacto
 📆 /horarios
+🌐 /redes
 
 🔥 Próximamente:
 📊 /tabla
@@ -226,6 +227,40 @@ if (comando === "/horarios") {
 🎮 ¡No te pierdas la gran final de la temporada!
 
 #LigaTitansTeam`
+    })
+}
+
+            // /REDES
+if (comando === "/redes") {
+    await sock.sendMessage(chat, {
+        text:
+`🌐 *REDES OFICIALES - TITANS CREATIVE* 🌐
+
+📸 *Instagram*
+https://www.instagram.com/official_titansteam?igsh=MXZsY3Z0YjFxMmRxOA==
+
+🎵 *TikTok*
+https://www.tiktok.com/@titans.team24/
+
+📘 *Facebook*
+https://www.facebook.com/share/1EBgSqdnap/
+
+🎬 *Youtube*
+https://www.youtube.com/@LigaTitansTeamOficial-l3f
+
+👾 *Twitch*
+https://www.twitch.tv/titansteamstournament
+
+🏆 *Liga Titans Team*
+Comunidad competitiva de Mobile Legends.
+
+🔥 Síguenos para enterarte de:
+✅ Nuevos torneos
+✅ Calendarios
+✅ Resultados
+✅ Noticias y anuncios oficiales
+
+👑 Gracias por formar parte de la comunidad Titans Team.`
     })
 }
             
