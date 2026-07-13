@@ -330,7 +330,7 @@ console.log(
 if (contadorSpam[usuario].length >= 15) {
 
     advertencias[usuario] = (advertencias[usuario] || 0) + 1
-    guardar advertencias()
+    guardarAdvertencias()
 
 // 5 advertencias = 5 minutos
 if (advertencias[usuario] === 5) {
