@@ -844,7 +844,7 @@ if (comandoBase === "/ytmp3") {
     if (!busqueda) {
         return await sock.sendMessage(chat, {
             text:
-`⚠️ Debes escribir el nombre del video.
+`⚠️ Debes escribir el nombre del audio.
 
 Ejemplo:
 /ytmp3 Alan Walker Faded`
@@ -868,33 +868,28 @@ Ejemplo:
         const video = resultados.videos[0]
 
         await sock.sendMessage(chat, {
-            image: {
-                url: video.thumbnail
-            },
-            caption:
-`🎵 *AUDIO ENCONTRADO*
+            text: `⬇️ Descargando audio...\n\n🎵 ${video.title}`
+        })
 
-📺 ${video.title}
+        const stream = ytdl(video.url, {
+            filter: "audioonly",
+            quality: "highestaudio"
+        })
 
-👤 Canal:
-${video.author.name}
-
-⏱ Duración:
-${video.timestamp}
-
-🔗 ${video.url}
-
-⚠️ Descarga de audio en desarrollo.
-
-🤖 TitansBot Oficial`
+        await sock.sendMessage(chat, {
+            audio: stream,
+            mimetype: "audio/mpeg",
+            fileName: `${video.title}.mp3`,
+            ptt: false
         })
 
     } catch (error) {
 
+        console.log("ERROR YTMP3")
         console.log(error)
 
         await sock.sendMessage(chat, {
-            text: "❌ Ocurrió un error al buscar el audio."
+            text: "❌ No fue posible descargar el audio."
         })
     }
 }
