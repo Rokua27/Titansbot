@@ -318,6 +318,59 @@ La advertencia ha sido almacenada correctamente.`,
         mentions: [mencionado]
     })
 }
+
+     // /ADVERTENCIAS
+if (comando.startsWith("/advertencias")) {
+
+    if (!esAdmin) {
+        return await sock.sendMessage(chat, {
+            text: "❌ Este comando es exclusivo para administradores."
+        })
+    }
+
+    const mencionado =
+        mensaje.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0]
+
+    if (!mencionado) {
+        return await sock.sendMessage(chat, {
+            text: "⚠️ Debes mencionar un usuario.\n\nEjemplo:\n/advertencias @usuario"
+        })
+    }
+
+    const historial = advertencias[mencionado] || []
+
+    if (historial.length === 0) {
+        return await sock.sendMessage(chat, {
+            text: `✅ El usuario @${mencionado.split("@")[0]} no tiene advertencias registradas.`,
+            mentions: [mencionado]
+        })
+    }
+
+    let respuesta =
+`📊 *HISTORIAL DISCIPLINARIO*
+
+👤 Usuario:
+@${mencionado.split("@")[0]}
+
+📈 Advertencias activas:
+${historial.length}/5
+
+`
+
+    historial.forEach((item, index) => {
+        respuesta +=
+`${index + 1}. 📅 ${item.fecha}
+📝 ${item.motivo}
+
+`
+    })
+
+    await sock.sendMessage(chat, {
+        text: respuesta,
+        mentions: [mencionado]
+    })
+}
+            
    // /CERRAR
 if (comando === "/cerrar") {
 
