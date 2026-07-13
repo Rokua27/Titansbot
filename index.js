@@ -999,7 +999,7 @@ if (comando === "/anime") {
     try {
 
         const respuesta = await axios.get(
-            "https://api.waifu.pics/sfw/neko"
+            "https://api.catboys.com/img"
         )
 
         await sock.sendMessage(chat, {
@@ -1007,15 +1007,17 @@ if (comando === "/anime") {
                 url: respuesta.data.url
             },
             caption:
-`🐲 Imagen anime aleatoria.
+`🌸 *IMAGEN ANIME*
 
 🤖 TitansBot Oficial`
         })
 
-    } catch {
+    } catch (error) {
+
+        console.log(error)
 
         await sock.sendMessage(chat, {
-            text: "❌ No se pudo obtener una imagen anime."
+            text: "❌ No fue posible obtener una imagen anime."
         })
     }
 }
@@ -1026,23 +1028,27 @@ if (comando === "/waifu") {
     try {
 
         const respuesta = await axios.get(
-            "https://api.waifu.pics/sfw/waifu"
+            "https://api.waifu.im/search"
         )
+
+        const imagen = respuesta.data.images[0].url
 
         await sock.sendMessage(chat, {
             image: {
-                url: respuesta.data.url
+                url: imagen
             },
             caption:
-`💖 Waifu seleccionada por TitansBot.
+`💖 *WAIFU TITANSBOT*
 
 🤖 TitansBot Oficial`
         })
 
-    } catch {
+    } catch (error) {
+
+        console.log(error)
 
         await sock.sendMessage(chat, {
-            text: "❌ No se pudo obtener una waifu."
+            text: "❌ No fue posible obtener una waifu."
         })
     }
 }
