@@ -136,6 +136,8 @@ async function iniciarBot() {
    // SISTEMA ANTI-SPAM
 // ==========================
 const usuario = mensaje.key.participant || mensaje.key.remoteJid
+console.log("Usuario:", usuario)
+console.log("Mensajes:", contadorSpam[usuario]?.length || 0)3
 const ahora = Date.now()
 
 if (!contadorSpam[usuario]) {
@@ -147,8 +149,13 @@ contadorSpam[usuario] = contadorSpam[usuario].filter(
 )
 
 contadorSpam[usuario].push(ahora)
-
-if (contadorSpam[usuario].length >= 10) {
+console.log(
+    "Spam detector:",
+    usuario,
+    "cantidad:",
+    contadorSpam[usuario].length
+)
+if (contadorSpam[usuario].length >= 3) {
 
     advertencias[usuario] = (advertencias[usuario] || 0) + 1
 
