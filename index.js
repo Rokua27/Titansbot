@@ -125,18 +125,13 @@ async function iniciarBot() {
 
             if (!mensaje.message) return
             if (mensaje.key.fromMe) return
-
+            const chat = mensaje.key.remoteJid
             const texto =
                 mensaje.message.conversation ||
                 mensaje.message.extendedTextMessage?.text ||
                 ""
 
             const comando = texto.toLowerCase().trim()
-
-            if (!comando.startsWith("/")) return
-
-            const chat = mensaje.key.remoteJid
-
 // ==========================
    // SISTEMA ANTI-SPAM
 // ==========================
@@ -174,6 +169,10 @@ Por favor evita enviar demasiados mensajes seguidos.`,
 
     contadorSpam[usuario] = []
 }         
+        // ==========================
+        // COMANDOS
+        // ==========================        
+            if (!comando.startsWith("/")) return
             // /PING
             if (comando === "/ping") {
 
