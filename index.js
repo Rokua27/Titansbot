@@ -1,5 +1,6 @@
 const http = require("http")
 const QRCode = require("qrcode")
+const axios = require ("axios")
 const {
     default: makeWASocket,
     useMultiFileAuthState,
@@ -765,6 +766,286 @@ ${datos.mensajes >= 1000 ? "Veterano" :
         mentions: [objetivo]
     })
 }
+
+// ==========================
+// COMANDOS DE DIVERSIÓN
+// ==========================
+
+ 
+// /DADO
+if (comando === "/dado") {
+
+    const resultado = Math.floor(Math.random() * 6) + 1
+
+    await sock.sendMessage(chat, {
+        text:
+`🎲 *LANZAMIENTO DE DADO*
+
+Resultado obtenido:
+
+🎯 ${resultado}`
+    })
+}
+
+// /MONEDA
+if (comando === "/moneda") {
+
+    const resultado =
+        Math.random() < 0.5
+            ? "🪙 Cara"
+            : "🪙 Sello"
+
+    await sock.sendMessage(chat, {
+        text:
+`🪙 *LANZAMIENTO DE MONEDA*
+
+Resultado:
+
+${resultado}`
+    })
+}
+
+// /8BALL
+if (comandoBase === "/8ball") {
+
+    const respuestas = [
+        "✅ Sí",
+        "❌ No",
+        "🤔 Tal vez",
+        "🔥 Definitivamente sí",
+        "⚠️ Mejor no",
+        "👀 Las probabilidades son buenas",
+        "😅 No parece probable",
+        "🏆 Todo apunta a que sí"
+    ]
+
+    const respuesta =
+        respuestas[
+            Math.floor(Math.random() * respuestas.length)
+        ]
+
+    await sock.sendMessage(chat, {
+        text:
+`🎱 *BOLA MÁGICA TITANS*
+
+${respuesta}`
+    })
+}
+
+// /QUIEN
+if (comandoBase === "/quien") {
+
+    if (!chat.endsWith("@g.us")) {
+        return await sock.sendMessage(chat, {
+            text: "❌ Este comando solo funciona en grupos."
+        })
+    }
+
+    const pregunta = texto.replace("/quien", "").trim()
+
+    if (!pregunta) {
+        return await sock.sendMessage(chat, {
+            text:
+`⚠️ Debes escribir una pregunta.
+
+Ejemplo:
+/quien será el MVP de la jornada`
+        })
+    }
+
+    const metadata = await sock.groupMetadata(chat)
+
+    const participantes = metadata.participants.map(
+        participante => participante.id
+    )
+
+    const elegido =
+        participantes[
+            Math.floor(
+                Math.random() * participantes.length
+            )
+        ]
+
+    await sock.sendMessage(chat, {
+        text:
+`🎲 *TITANSBOT HA DECIDIDO...*
+
+❓ ${pregunta}
+
+👑 El elegido es:
+
+@${elegido.split("@")[0]}
+
+🔥 La comunidad tendrá la última palabra.`,
+        mentions: [elegido]
+    })
+}
+
+// /SHIP
+if (comandoBase === "/ship") {
+
+    const mencionados =
+        mensaje.message.extendedTextMessage
+            ?.contextInfo
+            ?.mentionedJid || []
+
+    if (mencionados.length < 2) {
+        return await sock.sendMessage(chat, {
+            text:
+`⚠️ Debes mencionar dos usuarios.
+
+Ejemplo:
+/ship @usuario1 @usuario2`
+        })
+    }
+
+    const porcentaje =
+        Math.floor(Math.random() * 101)
+
+    await sock.sendMessage(chat, {
+        text:
+`💖 *COMPATIBILIDAD TITANSBOT*
+
+@${mencionados[0].split("@")[0]}
+❤️
+@${mencionados[1].split("@")[0]}
+
+📊 Compatibilidad:
+${porcentaje}%`,
+        mentions: mencionados
+    })
+}
+
+// /GATO
+if (comando === "/gato") {
+
+    try {
+
+        const respuesta = await axios.get(
+            "https://api.thecatapi.com/v1/images/search"
+        )
+
+        const imagen = respuesta.data[0].url
+
+        await sock.sendMessage(chat, {
+            image: { url: imagen },
+            caption: "🐱 Gatito aleatorio de TitansBot."
+        })
+
+    } catch {
+
+        await sock.sendMessage(chat, {
+            text: "❌ No fue posible obtener una imagen de gato."
+        })
+    }
+}
+
+// /PERRO
+if (comando === "/perro") {
+
+    try {
+
+        const respuesta = await axios.get(
+            "https://dog.ceo/api/breeds/image/random"
+        )
+
+        const imagen = respuesta.data.message
+
+        await sock.sendMessage(chat, {
+            image: { url: imagen },
+            caption: "🐶 Perrito aleatorio de TitansBot."
+        })
+
+    } catch {
+
+        await sock.sendMessage(chat, {
+            text: "❌ No fue posible obtener una imagen de perro."
+        })
+    }
+}
+
+// /MEME
+if (comando === "/meme") {
+
+    try {
+
+        const respuesta = await axios.get(
+            "https://meme-api.com/gimme"
+        )
+
+        await sock.sendMessage(chat, {
+            image: {
+                url: respuesta.data.url
+            },
+            caption:
+`😂 *MEME DEL DÍA*
+
+📌 ${respuesta.data.title}
+
+🤖 TitansBot Oficial`
+        })
+
+    } catch {
+
+        await sock.sendMessage(chat, {
+            text: "❌ No se pudo obtener un meme."
+        })
+    }
+}
+
+// /ANIME
+if (comando === "/anime") {
+
+    try {
+
+        const respuesta = await axios.get(
+            "https://api.waifu.pics/sfw/neko"
+        )
+
+        await sock.sendMessage(chat, {
+            image: {
+                url: respuesta.data.url
+            },
+            caption:
+`🐲 Imagen anime aleatoria.
+
+🤖 TitansBot Oficial`
+        })
+
+    } catch {
+
+        await sock.sendMessage(chat, {
+            text: "❌ No se pudo obtener una imagen anime."
+        })
+    }
+}
+            
+// /WAIFU
+if (comando === "/waifu") {
+
+    try {
+
+        const respuesta = await axios.get(
+            "https://api.waifu.pics/sfw/waifu"
+        )
+
+        await sock.sendMessage(chat, {
+            image: {
+                url: respuesta.data.url
+            },
+            caption:
+`💖 Waifu seleccionada por TitansBot.
+
+🤖 TitansBot Oficial`
+        })
+
+    } catch {
+
+        await sock.sendMessage(chat, {
+            text: "❌ No se pudo obtener una waifu."
+        })
+    }
+}
             
 // /EVENTO
 if (comando.startsWith("/evento")) {
@@ -996,151 +1277,7 @@ if (comandoBase === "/unmute") {
 Todos los miembros pueden volver a enviar mensajes.`
     })
 }
-
-// /DADO
-if (comando === "/dado") {
-
-    const resultado = Math.floor(Math.random() * 6) + 1
-
-    await sock.sendMessage(chat, {
-        text:
-`🎲 *LANZAMIENTO DE DADO*
-
-Resultado obtenido:
-
-🎯 ${resultado}`
-    })
-}
-
-// /MONEDA
-if (comando === "/moneda") {
-
-    const resultado =
-        Math.random() < 0.5
-            ? "🪙 Cara"
-            : "🪙 Sello"
-
-    await sock.sendMessage(chat, {
-        text:
-`🪙 *LANZAMIENTO DE MONEDA*
-
-Resultado:
-
-${resultado}`
-    })
-}
-
-// /8BALL
-if (comandoBase === "/8ball") {
-
-    const respuestas = [
-        "✅ Sí",
-        "❌ No",
-        "🤔 Tal vez",
-        "🔥 Definitivamente sí",
-        "⚠️ Mejor no",
-        "👀 Las probabilidades son buenas",
-        "😅 No parece probable",
-        "🏆 Todo apunta a que sí"
-    ]
-
-    const respuesta =
-        respuestas[
-            Math.floor(Math.random() * respuestas.length)
-        ]
-
-    await sock.sendMessage(chat, {
-        text:
-`🎱 *BOLA MÁGICA TITANS*
-
-${respuesta}`
-    })
-}
-
-// /QUIEN
-if (comandoBase === "/quien") {
-
-    if (!chat.endsWith("@g.us")) {
-        return await sock.sendMessage(chat, {
-            text: "❌ Este comando solo funciona en grupos."
-        })
-    }
-
-    const pregunta = texto.replace("/quien", "").trim()
-
-    if (!pregunta) {
-        return await sock.sendMessage(chat, {
-            text:
-`⚠️ Debes escribir una pregunta.
-
-Ejemplo:
-/quien será el MVP de la jornada`
-        })
-    }
-
-    const metadata = await sock.groupMetadata(chat)
-
-    const participantes = metadata.participants.map(
-        participante => participante.id
-    )
-
-    const elegido =
-        participantes[
-            Math.floor(
-                Math.random() * participantes.length
-            )
-        ]
-
-    await sock.sendMessage(chat, {
-        text:
-`🎲 *TITANSBOT HA DECIDIDO...*
-
-❓ ${pregunta}
-
-👑 El elegido es:
-
-@${elegido.split("@")[0]}
-
-🔥 La comunidad tendrá la última palabra.`,
-        mentions: [elegido]
-    })
-}
-
-// /SHIP
-if (comandoBase === "/ship") {
-
-    const mencionados =
-        mensaje.message.extendedTextMessage
-            ?.contextInfo
-            ?.mentionedJid || []
-
-    if (mencionados.length < 2) {
-        return await sock.sendMessage(chat, {
-            text:
-`⚠️ Debes mencionar dos usuarios.
-
-Ejemplo:
-/ship @usuario1 @usuario2`
-        })
-    }
-
-    const porcentaje =
-        Math.floor(Math.random() * 101)
-
-    await sock.sendMessage(chat, {
-        text:
-`💖 *COMPATIBILIDAD TITANSBOT*
-
-@${mencionados[0].split("@")[0]}
-❤️
-@${mencionados[1].split("@")[0]}
-
-📊 Compatibilidad:
-${porcentaje}%`,
-        mentions: mencionados
-    })
-}
-            
+         
             // /MENU
             if (comando === "/menu") {
 
