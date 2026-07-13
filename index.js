@@ -1038,6 +1038,9 @@ if (comando === "/waifu") {
 
     try {
 
+        console.log("===== PRUEBA WAIFU API =====")
+        console.log("API KEY:", process.env.WAIFU_API_KEY)
+
         const response = await axios.get(
             "https://api.waifu.im/search?included_tags=waifu",
             {
@@ -1047,30 +1050,22 @@ if (comando === "/waifu") {
             }
         )
 
-        const imagen =
-            response.data.images[0].url
+        const imagen = response.data.images[0].url
 
         await sock.sendMessage(chat, {
-            image: {
-                url: imagen
-            },
-            caption:
-`💖 *WAIFU ALEATORIA*
-
-🎀 Imagen obtenida correctamente desde Waifu.im
-
-🤖 TitansBot Oficial`
+            image: { url: imagen },
+            caption: "💖 Waifu aleatoria"
         })
 
     } catch (error) {
 
-        console.log(error.response?.data || error.message)
+        console.log("===== ERROR WAIFU =====")
+        console.log("STATUS:", error.response?.status)
+        console.log("DATA:", error.response?.data)
+        console.log("MENSAJE:", error.message)
 
         await sock.sendMessage(chat, {
-            text:
-`❌ No fue posible obtener una waifu en este momento.
-
-Intenta nuevamente en unos segundos.`
+            text: "❌ No fue posible obtener una waifu."
         })
     }
 }
