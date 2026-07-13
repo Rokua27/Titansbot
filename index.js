@@ -143,6 +143,15 @@ if (fs.existsSync("./roles.json")) {
         fs.readFileSync("./roles.json")
     )
 }
+    z
+let silenciados = {}
+
+if (fs.existsSync("./silenciados.json")) {
+    silenciados = JSON.parse(
+        fs.readFileSync("./silenciados.json")
+    )
+}
+
 function guardarAdvertencias() {
     fs.writeFileSync(
         "./advertencias.json",
@@ -162,6 +171,14 @@ function guardarAdvertencias() {
         JSON.stringify(roles, null, 2)
     )
     }
+
+    function guardarSilenciados() {
+    fs.writeFileSync(
+        "./silenciados.json",
+        JSON.stringify(silenciados, null, 2)
+    )
+    }
+    
     sock.ev.on("messages.upsert", async ({ messages }) => {
 
         try {
@@ -283,10 +300,33 @@ Por favor evita enviar demasiados mensajes seguidos.`,
 
     contadorSpam[usuario] = []
 }         
-        // ==========================
-        // COMANDOS
-        // ==========================        
-            if (!comando.startsWith("/")) return
+            
+// ==========================
+// SISTEMA DE SILENCIOS
+// ==========================
+if (
+    silenciados[usuario] &&
+    Date.now() < silenciados[usuario].hasta
+) {
+
+    return await sock.sendMessage(chat,{
+        text:
+`🔇 Actualmente te encuentras silenciado por el staff.
+
+⏳ Finaliza:
+${new Date(
+    silenciados[usuario].hasta
+).toLocaleString("es-CO")}
+
+📝 Motivo:
+${silenciados[usuario].motivo}`
+    })
+}
+
+// ==========================
+// COMANDOS
+// ==========================
+if (!comando.startsWith("/")) return
             // /PING
             if (comando === "/ping") {
 
