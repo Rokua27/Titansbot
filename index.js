@@ -739,8 +739,42 @@ ${mensajeRecordatorio}
 
     }, minutos * 60 * 1000)
 }
-            
-            
+
+// /ENCUESTA
+if (comandoBase === "/encuesta") {
+
+    if (!esAdmin) {
+        return await sock.sendMessage(chat, {
+            text: "❌ Este comando es exclusivo para administradores."
+        })
+    }
+
+    const pregunta = texto.replace("/encuesta", "").trim()
+
+    if (!pregunta) {
+        return await sock.sendMessage(chat, {
+            text:
+`⚠️ Debes escribir una pregunta.
+
+Ejemplo:
+/encuesta ¿La próxima temporada debería ser BO3?`
+        })
+    }
+
+    await sock.sendMessage(chat, {
+        text:
+`📊 *ENCUESTA OFICIAL*
+🏆 *LIGA TITANS TEAM*
+
+❓ ${pregunta}
+
+👍 Reacciona con 👍 para votar SI.
+👎 Reacciona con 👎 para votar NO.
+
+🤖 *TitansBot Oficial*`
+    })
+}
+                  
             // /MENU
             if (comando === "/menu") {
 
