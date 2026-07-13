@@ -202,6 +202,9 @@ Por favor evita enviar demasiados mensajes seguidos.`,
                     text: "🏓 Pong! TitansBot está funcionando correctamente."
                 })
             }
+            // ==========================
+            // COMANDOS ADMINISTRATIVOS
+            // =========================
             // /ADMIN
             if (comando === "/admin") {
 
@@ -220,6 +223,35 @@ Por favor evita enviar demasiados mensajes seguidos.`,
 👤 Usuario reconocido como administrador del grupo.
 
 TitansBot tiene permisos administrativos activos.`
+    })
+}
+
+            // /TAGALL
+if (comando === "/tagall") {
+
+    if (!esAdmin) {
+        return await sock.sendMessage(chat, {
+            text: "❌ Este comando es exclusivo para administradores."
+        })
+    }
+
+    const metadata = await sock.groupMetadata(chat)
+
+    const participantes = metadata.participants.map(
+        participante => participante.id
+    )
+
+    let textoTag = "📢 *ATENCIÓN LIGA TITANS TEAM*\n\n"
+
+    textoTag += "Convocatoria general para todos los miembros:\n\n"
+
+    for (let miembro of participantes) {
+        textoTag += `@${miembro.split("@")[0]}\n`
+    }
+
+    await sock.sendMessage(chat, {
+        text: textoTag,
+        mentions: participantes
     })
 }
             // /MENU
