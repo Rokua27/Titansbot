@@ -801,8 +801,11 @@ Ejemplo:
         const video = resultados.videos[0]
 
         await sock.sendMessage(chat, {
-            text:
-`🎬 *RESULTADO ENCONTRADO*
+            image: {
+                url: video.thumbnail
+            },
+            caption:
+`🎬 *VIDEO ENCONTRADO*
 
 📺 *Título:*
 ${video.title}
@@ -817,7 +820,9 @@ ${video.timestamp}
 ${video.views.toLocaleString()}
 
 🔗 *Enlace:*
-${video.url}`
+${video.url}
+
+🤖 TitansBot Oficial`
         })
 
     } catch (error) {
@@ -828,7 +833,7 @@ ${video.url}`
             text: "❌ Ocurrió un error al buscar el video."
         })
     }
-                           }
+}
             
 // ==========================
 // COMANDOS DE DIVERSIÓN
