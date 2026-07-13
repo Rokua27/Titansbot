@@ -999,26 +999,30 @@ if (comando === "/anime") {
     try {
 
         const respuesta = await axios.get(
-            "https://nekos.best/api/v2/neko"
+            "https://nekos.best/api/v2/neko",
+            {
+                headers: {
+                    "User-Agent": "Mozilla/5.0"
+                }
+            }
         )
 
         const imagen = respuesta.data.results[0].url
 
-        const buffer = await axios.get(imagen, {
-            responseType: "arraybuffer"
-        })
-
         await sock.sendMessage(chat, {
-            image: Buffer.from(buffer.data),
-            caption: "🌸 Imagen anime aleatoria."
+            image: { url: imagen },
+            caption:
+`🌸 *IMAGEN ANIME*
+
+🤖 TitansBot Oficial`
         })
 
     } catch (error) {
 
-        console.log(error.message)
+        console.log("ERROR ANIME:", error.message)
 
         await sock.sendMessage(chat, {
-            text: "❌ No se pudo obtener una imagen anime."
+            text: "❌ La API de anime rechazó la solicitud."
         })
     }
 }
@@ -1029,26 +1033,30 @@ if (comando === "/waifu") {
     try {
 
         const respuesta = await axios.get(
-            "https://api.waifu.im/search"
+            "https://api.nekosapi.com/v3/images/random",
+            {
+                headers: {
+                    "User-Agent": "Mozilla/5.0"
+                }
+            }
         )
 
-        const imagen = respuesta.data.images[0].url
-
-        const buffer = await axios.get(imagen, {
-            responseType: "arraybuffer"
-        })
+        const imagen = respuesta.data.items[0].image_url
 
         await sock.sendMessage(chat, {
-            image: Buffer.from(buffer.data),
-            caption: "💖 Waifu seleccionada por TitansBot."
+            image: { url: imagen },
+            caption:
+`💖 *WAIFU TITANSBOT*
+
+🤖 TitansBot Oficial`
         })
 
     } catch (error) {
 
-        console.log(error.message)
+        console.log("ERROR WAIFU:", error.message)
 
         await sock.sendMessage(chat, {
-            text: "❌ No se pudo obtener una waifu."
+            text: "❌ La API de waifus rechazó la solicitud."
         })
     }
 }
