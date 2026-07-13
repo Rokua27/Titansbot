@@ -2,6 +2,7 @@ const http = require("http")
 const QRCode = require("qrcode")
 const axios = require ("axios")
 const yts = require("yt-search")
+const ytdl = require("@distube/ytdl-core")
 
 const {
     default: makeWASocket,
@@ -831,6 +832,69 @@ ${video.url}
 
         await sock.sendMessage(chat, {
             text: "❌ Ocurrió un error al buscar el video."
+        })
+    }
+}
+
+// /YTMP3
+if (comandoBase === "/ytmp3") {
+
+    const busqueda = texto.replace("/ytmp3", "").trim()
+
+    if (!busqueda) {
+        return await sock.sendMessage(chat, {
+            text:
+`⚠️ Debes escribir el nombre del video.
+
+Ejemplo:
+/ytmp3 Alan Walker Faded`
+        })
+    }
+
+    try {
+
+        await sock.sendMessage(chat, {
+            text: "🔍 Buscando en YouTube..."
+        })
+
+        const resultados = await yts(busqueda)
+
+        if (!resultados.videos.length) {
+            return await sock.sendMessage(chat, {
+                text: "❌ No se encontraron resultados."
+            })
+        }
+
+        const video = resultados.videos[0]
+
+        await sock.sendMessage(chat, {
+            image: {
+                url: video.thumbnail
+            },
+            caption:
+`🎵 *AUDIO ENCONTRADO*
+
+📺 ${video.title}
+
+👤 Canal:
+${video.author.name}
+
+⏱ Duración:
+${video.timestamp}
+
+🔗 ${video.url}
+
+⚠️ Descarga de audio en desarrollo.
+
+🤖 TitansBot Oficial`
+        })
+
+    } catch (error) {
+
+        console.log(error)
+
+        await sock.sendMessage(chat, {
+            text: "❌ Ocurrió un error al buscar el audio."
         })
     }
 }
