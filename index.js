@@ -257,6 +257,23 @@ const esDirector =
 
             const comando = texto.toLowerCase().trim()
             const comandoBase = comando.split(" ")[0]
+
+            if (
+    silenciados[usuario] &&
+    silenciados[usuario] !== "permanente"
+) {
+
+    if (Date.now() > silenciados[usuario].hasta) {
+        delete silenciados[usuario]
+        guardarSilenciados()
+    } else {
+        return
+    }
+}
+
+if (silenciados[usuario] === "permanente") {
+    return
+}
 // ==========================
    // SISTEMA ANTI-SPAM
 // ==========================
@@ -728,6 +745,132 @@ if (comando.startsWith("/clearwarn")) {
 
 Todas las advertencias fueron eliminadas correctamente.`,
         mentions: [mencionado]
+    })
+}
+
+// /SILENCIAR
+if (comandoBase === "/silenciar") {
+
+    if (
+        !esAdmin &&
+        roles[usuario] !== "moderador"
+    ) {
+        return await sock.sendMessage(chat, {
+            text: "❌ No tienes permisos para usar este comando."
+        })
+    }
+
+    const mencionado =
+        mensaje.message.extendedTextMessage
+            ?.contextInfo
+            ?.mentionedJid?.[0]
+
+    if (!mencionado) {
+        return await sock.sendMessage(chat, {
+            text:
+`⚠️ Debes mencionar un usuario.
+
+Ejemplo:
+/silenciar @usuario 30 Spam excesivo`
+        })
+    }
+
+    const partes = texto.split(" ")
+
+    const minutos = parseInt(partes[2])
+
+    if (isNaN(minutos)) {
+        return await sock.sendMessage(chat, {
+            text:
+`⚠️ Debes indicar la duración en minutos.
+
+Ejemplo:
+/silenciar @usuario 30 Spam`
+        })
+    }
+
+    const motivo =
+        partes.slice(3).join(" ") ||
+        "Sin motivo especificado"
+
+    silenciados[mencionado] = {
+        hasta:
+            Date.now() +
+            minutos * 60 * 1000,
+        motivo,
+        moderador: usuario
+    }
+
+    guardarSilenciados()
+
+    await sock.sendMessage(chat, {
+        text:
+`🔇 *USUARIO SILENCIADO*
+
+👤 Usuario:
+@${mencionado.split("@")[0]}
+
+⏳ Duración:
+${minutos} minutos
+
+📝 Motivo:
+${motivo}
+
+👮 Moderador:
+@${usuario.split("@")[0]}`,
+        mentions: [mencionado, usuario]
+    })
+}
+
+// /DESILENCIAR
+if (comandoBase === "/desilenciar") {
+
+    if (
+        !esAdmin &&
+        roles[usuario] !== "moderador"
+    ) {
+        return await sock.sendMessage(chat, {
+            text: "❌ No tienes permisos para usar este comando."
+        })
+    }
+
+    const mencionado =
+        mensaje.message.extendedTextMessage
+            ?.contextInfo
+            ?.mentionedJid?.[0]
+
+    if (!mencionado) {
+        return await sock.sendMessage(chat, {
+            text:
+`⚠️ Debes mencionar un usuario.
+
+Ejemplo:
+/desilenciar @usuario`
+        })
+    }
+
+    if (!silenciados[mencionado]) {
+        return await sock.sendMessage(chat, {
+            text:
+`✅ El usuario @${mencionado.split("@")[0]} no se encuentra silenciado.`,
+            mentions: [mencionado]
+        })
+    }
+
+    delete silenciados[mencionado]
+
+    guardarSilenciados()
+
+    await sock.sendMessage(chat, {
+        text:
+`🔊 *USUARIO DESILENCIADO*
+
+👤 Usuario:
+@${mencionado.split("@")[0]}
+
+👮 Acción realizada por:
+@${usuario.split("@")[0]}`,
+        mentions: [mencionado, usuario]
     })
 }
             
