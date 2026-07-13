@@ -134,7 +134,15 @@ if (fs.existsSync("./actividad.json")) {
     actividad = JSON.parse(
         fs.readFileSync("./actividad.json")
     )
-}    
+}
+
+let roles = {}
+
+if (fs.existsSync("./roles.json")) {
+    roles = JSON.parse(
+        fs.readFileSync("./roles.json")
+    )
+}
 function guardarAdvertencias() {
     fs.writeFileSync(
         "./advertencias.json",
@@ -145,6 +153,13 @@ function guardarAdvertencias() {
     fs.writeFileSync(
         "./actividad.json",
         JSON.stringify(actividad, null, 2)
+    )
+    }
+
+    function guardarRoles() {
+    fs.writeFileSync(
+        "./roles.json",
+        JSON.stringify(roles, null, 2)
     )
     }
     sock.ev.on("messages.upsert", async ({ messages }) => {
@@ -189,6 +204,35 @@ if (chat.endsWith("@g.us")) {
 
     esAdmin = admins.includes(usuario)
 }
+// ==========================
+// SISTEMA DE ROLES TITANSBOT
+// ==========================
+
+const rolUsuario = roles[usuario] || "usuario"
+
+const esArbitro =
+
+    rolUsuario === "arbitro" ||
+
+    rolUsuario === "moderador" ||
+
+    rolUsuario === "director" ||
+
+    esAdmin
+
+const esModerador =
+
+    rolUsuario === "moderador" ||
+
+    rolUsuario === "director" ||
+
+    esAdmin
+
+const esDirector =
+
+    rolUsuario === "director" ||
+
+    esAdmin
             const texto =
                 mensaje.message.conversation ||
                 mensaje.message.extendedTextMessage?.text ||
@@ -272,8 +316,167 @@ Por favor evita enviar demasiados mensajes seguidos.`,
 
 TitansBot tiene permisos administrativos activos.`
     })
+            }
+// ======================================
+// COMANDO PARA ASIGNAR ROLES
+// ======================================
+
+if (comando.startsWith("/setrol")) {
+
+    if (!esAdmin) {
+
+        return await sock.sendMessage(chat,{
+
+            text:"❌ Solo administradores pueden asignar roles."
+
+        })
+
+    }
+
+    const mencionado =
+
+        mensaje.message.extendedTextMessage
+
+        ?.contextInfo
+
+        ?.mentionedJid?.[0]
+
+    if (!mencionado) {
+
+        return await sock.sendMessage(chat,{
+
+            text:
+
+`⚠️ Uso correcto:
+
+/setrol @usuario arbitro
+
+Roles disponibles:
+
+🎖 arbitro
+
+🛡 moderador
+
+👑 director`
+
+        })
+
+    }
+
+    const partes = texto.split(" ")
+
+    const nuevoRol = partes[2]?.toLowerCase()
+
+    const rolesValidos = [
+
+        "arbitro",
+
+        "moderador",
+
+        "director"
+
+    ]
+
+    if (!rolesValidos.includes(nuevoRol)) {
+
+        return await sock.sendMessage(chat,{
+
+            text:"❌ Rol inválido."
+
+        })
+
+    }
+
+    roles[mencionado] = nuevoRol
+
+    guardarRoles()
+
+    await sock.sendMessage(chat,{
+
+        text:
+
+`✅ Rol asignado correctamente.
+
+👤 Usuario:
+
+@${mencionado.split("@")[0]}
+
+🏷 Nuevo rol:
+
+${nuevoRol}`,
+
+        mentions:[mencionado]
+
+    }) 
 }
 
+// ======================================
+// CONSULTAR ROL
+// ======================================
+
+if (comando.startsWith("/rol")) {
+
+    const mencionado =
+        mensaje.message.extendedTextMessage
+        ?.contextInfo
+        ?.mentionedJid?.[0]
+
+    const objetivo = mencionado || usuario
+
+    const rol = roles[objetivo] || "usuario"
+
+    await sock.sendMessage(chat,{
+        text:
+`👤 Usuario:
+@${objetivo.split("@")[0]}
+
+🏷 Rol actual:
+${rol}`,
+        mentions:[objetivo]
+    })
+}
+
+// ======================================
+// ELIMINAR ROL
+// ======================================
+
+if (comando.startsWith("/removerrol")) {
+
+    if (!esAdmin) {
+        return await sock.sendMessage(chat,{
+            text:"❌ Solo administradores pueden eliminar roles."
+        })
+    }
+
+    const mencionado =
+        mensaje.message.extendedTextMessage
+        ?.contextInfo
+        ?.mentionedJid?.[0]
+
+    if (!mencionado) {
+        return await sock.sendMessage(chat,{
+            text:
+`⚠️ Uso correcto:
+
+/removerrol @usuario`
+        })
+    }
+
+    delete roles[mencionado]
+
+    guardarRoles()
+
+    await sock.sendMessage(chat,{
+        text:
+`🧹 Rol eliminado correctamente.
+
+👤 Usuario:
+@${mencionado.split("@")[0]}
+
+Ahora vuelve a ser usuario normal.`,
+        mentions:[mencionado]
+    })
+}
             // /TAGALL
 if (comando === "/tagall") {
 
