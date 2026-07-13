@@ -999,22 +999,23 @@ if (comando === "/anime") {
     try {
 
         const response = await axios.get(
-    "https://nekos.best/api/v2/neko",
-    {
-        headers: {
-            "User-Agent": "Mozilla/5.0"
-        }
-    }
-)
+            "https://nekos.best/api/v2/neko",
+            {
+                headers: {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+                    "Accept": "application/json",
+                    "Referer": "https://nekos.best/"
+                }
+            }
+        )
 
-const imagen = response.data.results[0].url
+        const imagen = response.data.results[0].url
 
         await sock.sendMessage(chat, {
             image: {
                 url: imagen
             },
-            caption:
-`🎌 *IMAGEN ANIME*
+            caption: `🎌 *ANIME GENERADO*
 
 Solicitada por:
 @${usuario.split("@")[0]}
@@ -1025,11 +1026,13 @@ Solicitada por:
 
     } catch (error) {
 
-        console.log(error.message)
+        console.log("===== ERROR ANIME =====")
+        console.log("STATUS:", error.response?.status)
+        console.log("DATA:", error.response?.data)
+        console.log("MENSAJE:", error.message)
 
         await sock.sendMessage(chat, {
-            text:
-"❌ No fue posible obtener una imagen anime."
+            text: "❌ No fue posible obtener una imagen anime."
         })
     }
 }
@@ -1040,24 +1043,23 @@ if (comando === "/waifu") {
     try {
 
         const response = await axios.get(
-    "https://nekos.best/api/v2/waifu",
-    {
-        headers: {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-            "Accept": "application/json",
-            "Referer": "https://nekos.best/"
-        }
-    }
-)
+            "https://nekos.best/api/v2/waifu",
+            {
+                headers: {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+                    "Accept": "application/json",
+                    "Referer": "https://nekos.best/"
+                }
+            }
+        )
 
-const imagen = response.data.results[0].url
+        const imagen = response.data.results[0].url
 
         await sock.sendMessage(chat, {
             image: {
                 url: imagen
             },
-            caption:
-`🌸 *WAIFU GENERADA*
+            caption: `🌸 *WAIFU GENERADA*
 
 Solicitada por:
 @${usuario.split("@")[0]}
@@ -1068,11 +1070,13 @@ Solicitada por:
 
     } catch (error) {
 
-        console.log(error.message)
+        console.log("===== ERROR WAIFU =====")
+        console.log("STATUS:", error.response?.status)
+        console.log("DATA:", error.response?.data)
+        console.log("MENSAJE:", error.message)
 
         await sock.sendMessage(chat, {
-            text:
-"❌ No fue posible obtener una waifu."
+            text: "❌ No fue posible obtener una waifu."
         })
     }
 }
