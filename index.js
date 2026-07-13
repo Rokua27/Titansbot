@@ -143,7 +143,7 @@ if (fs.existsSync("./roles.json")) {
         fs.readFileSync("./roles.json")
     )
 }
-    z
+    
 let silenciados = {}
 
 if (fs.existsSync("./silenciados.json")) {
