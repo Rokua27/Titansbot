@@ -999,10 +999,15 @@ if (comando === "/anime") {
     try {
 
         const response = await axios.get(
-            "https://nekos.best/api/v2/waifu"
-        )
+    "https://nekos.best/api/v2/neko",
+    {
+        headers: {
+            "User-Agent": "Mozilla/5.0"
+        }
+    }
+)
 
-        const imagen = response.data.url
+const imagen = response.data.results[0].url
 
         await sock.sendMessage(chat, {
             image: {
@@ -1035,10 +1040,15 @@ if (comando === "/waifu") {
     try {
 
         const response = await axios.get(
-            "https://nekos.best/api/v2/waifu"
-        )
+    "https://nekos.best/api/v2/waifu",
+    {
+        headers: {
+            "User-Agent": "Mozilla/5.0"
+        }
+    }
+)
 
-        const imagen = response.data.url
+const imagen = response.data.results[0].url
 
         await sock.sendMessage(chat, {
             image: {
