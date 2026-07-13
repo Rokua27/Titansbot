@@ -496,7 +496,43 @@ if (comando === "/abrir") {
 Todos los miembros pueden volver a enviar mensajes.`
     })
 }         
-      
+
+// /ANUNCIO
+if (comando.startsWith("/anuncio")) {
+
+    if (!esAdmin) {
+        return await sock.sendMessage(chat, {
+            text: "❌ Este comando es exclusivo para administradores."
+        })
+    }
+
+    const anuncio = texto.replace("/anuncio", "").trim()
+
+    if (!anuncio) {
+        return await sock.sendMessage(chat, {
+            text:
+`⚠️ Debes escribir el contenido del anuncio.
+
+Ejemplo:
+/anuncio La final comenzará a las 8:30 PM.`
+        })
+    }
+
+    await sock.sendMessage(chat, {
+        text:
+`╔════════════════════╗
+📢 *ANUNCIO OFICIAL*
+🏆 *LIGA TITANS TEAM*
+╚════════════════════╝
+
+${anuncio}
+
+━━━━━━━━━━━━━━━━━━━━
+🤖 *TitansBot Oficial*
+👑 *Administración Liga Titans Team*`
+    })
+}
+
             // /MENU
             if (comando === "/menu") {
 
