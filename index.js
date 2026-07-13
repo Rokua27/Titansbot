@@ -1,6 +1,8 @@
 const http = require("http")
 const QRCode = require("qrcode")
 const axios = require ("axios")
+const yts = require("yt-search")
+
 const {
     default: makeWASocket,
     useMultiFileAuthState,
@@ -767,6 +769,61 @@ ${datos.mensajes >= 1000 ? "Veterano" :
     })
 }
 
+// /VIDEO
+if (comando.startsWith("/video")) {
+
+    const busqueda = texto.replace("/video", "").trim()
+
+    if (!busqueda) {
+        return await sock.sendMessage(chat, {
+            text: "⚠️ Escribe el nombre del video.\n\nEjemplo:\n/video Mobile Legends M6 Grand Finals
+
+    await sock.sendMessage(chat, {
+        text: "🔍 Buscando en YouTube..."
+    })
+
+    try {
+
+        const resultados = await yts(busqueda)
+
+        if (!resultados.videos.length) {
+            return await sock.sendMessage(chat, {
+                text: "❌ No se encontraron resultados."
+            })
+        }
+
+        const video = resultados.videos[0]
+
+        await sock.sendMessage(chat, {
+            text:
+`🎬 *RESULTADO ENCONTRADO*
+
+📺 *Título:*
+${video.title}
+
+👤 *Canal:*
+${video.author.name}
+
+⏱ *Duración:*
+${video.timestamp}
+
+👁 *Vistas:*
+${video.views.toLocaleString()}
+
+🔗 *Enlace:*
+${video.url}`
+        })
+
+    } catch (error) {
+
+        console.log(error)
+
+        await sock.sendMessage(chat, {
+            text: "❌ Ocurrió un error al buscar el video."
+        })
+    }
+}
+            
 // ==========================
 // COMANDOS DE DIVERSIÓN
 // ==========================
