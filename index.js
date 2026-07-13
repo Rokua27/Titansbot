@@ -124,11 +124,23 @@ if (fs.existsSync("./advertencias.json")) {
         fs.readFileSync("./advertencias.json")
     )
 }
-    
+let actividad = {}
+
+if (fs.existsSync("./actividad.json")) {
+    actividad = JSON.parse(
+        fs.readFileSync("./actividad.json")
+    )
+}    
 function guardarAdvertencias() {
     fs.writeFileSync(
         "./advertencias.json",
         JSON.stringify(advertencias, null, 2)
+    )
+    }
+    function guardarActividad() {
+    fs.writeFileSync(
+        "./actividad.json",
+        JSON.stringify(actividad, null, 2)
     )
     }
     sock.ev.on("messages.upsert", async ({ messages }) => {
@@ -140,11 +152,28 @@ function guardarAdvertencias() {
             if (!mensaje.message) return
             if (mensaje.key.fromMe) return
             const chat = mensaje.key.remoteJid
-            // ==========================
-            // VERIFICAR ADMINISTRADORES
-            // =========================
-            const usuario = mensaje.key.participant || mensaje.key.remoteJid
 
+// Usuario que envió el mensaje
+const usuario =
+    mensaje.key.participant ||
+    mensaje.key.remoteJid
+
+// ==========================
+// SISTEMA DE ACTIVIDAD
+// ==========================
+if (!actividad[usuario]) {
+    actividad[usuario] = {
+        mensajes: 0
+    }
+}
+
+actividad[usuario].mensajes++
+
+guardarActividad()
+
+// ==========================
+// VERIFICAR ADMINISTRADORES
+// ==========================
 let esAdmin = false
 
 if (chat.endsWith("@g.us")) {
