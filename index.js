@@ -254,6 +254,51 @@ if (comando === "/tagall") {
         mentions: participantes
     })
 }
+
+   // /CERRAR
+if (comando === "/cerrar") {
+
+    if (!esAdmin) {
+        return await sock.sendMessage(chat, {
+            text: "❌ Este comando es exclusivo para administradores."
+        })
+    }
+
+    await sock.groupSettingUpdate(
+        chat,
+        "announcement"
+    )
+
+    await sock.sendMessage(chat, {
+        text:
+`🔒 *GRUPO CERRADO*
+
+Solo los administradores pueden enviar mensajes hasta nuevo aviso.`
+    })
+}
+
+   // /ABRIR
+if (comando === "/abrir") {
+
+    if (!esAdmin) {
+        return await sock.sendMessage(chat, {
+            text: "❌ Este comando es exclusivo para administradores."
+        })
+    }
+
+    await sock.groupSettingUpdate(
+        chat,
+        "not_announcement"
+    )
+
+    await sock.sendMessage(chat, {
+        text:
+`🔓 *GRUPO ABIERTO*
+
+Todos los miembros pueden volver a enviar mensajes.`
+    })
+}         
+      
             // /MENU
             if (comando === "/menu") {
 
