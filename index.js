@@ -152,6 +152,14 @@ if (fs.existsSync("./silenciados.json")) {
     )
 }
 
+let logs = []
+
+if (fs.existsSync("./logs.json")) {
+    logs = JSON.parse(
+        fs.readFileSync("./logs.json")
+    )
+}
+    
 function guardarAdvertencias() {
     fs.writeFileSync(
         "./advertencias.json",
@@ -178,7 +186,31 @@ function guardarAdvertencias() {
         JSON.stringify(silenciados, null, 2)
     )
     }
-    
+
+    function guardarLogs() {
+    fs.writeFileSync(
+        "./logs.json",
+        JSON.stringify(logs, null, 2)
+    )
+    }
+
+    function registrarLog(
+    staff,
+    accion,
+    objetivo,
+    motivo = ""
+) {
+
+    logs.push({
+        fecha: new Date().toLocaleString("es-CO"),
+        staff,
+        accion,
+        objetivo,
+        motivo
+    })
+
+    guardarLogs()
+    }
     sock.ev.on("messages.upsert", async ({ messages }) => {
 
         try {
@@ -205,8 +237,7 @@ if (!actividad[usuario]) {
 
 actividad[usuario].mensajes++
 
-guardarActividad()
-
+guardarActividad()       
 // ==========================
 // VERIFICAR ADMINISTRADORES
 // ==========================
@@ -534,6 +565,13 @@ Roles disponibles:
 
     guardarRoles()
 
+registrarLog(
+    usuario,
+    "asignación de rol",
+    mencionado,
+    nuevoRol
+)
+    
     await sock.sendMessage(chat,{
 
         text:
@@ -681,6 +719,13 @@ if (comando.startsWith("/warn")) {
     })
 
     guardarAdvertencias()
+
+    registrarLog(
+    usuario,
+    "advertencia",
+    mencionado,
+    motivo
+)
 
     await sock.sendMessage(chat, {
         text:
@@ -889,6 +934,13 @@ Ejemplo:
 
     guardarSilenciados()
 
+    registrarLog(
+    usuario,
+    "silencio",
+    mencionado,
+    motivo
+)
+
     await sock.sendMessage(chat, {
         text:
 `🔇 *USUARIO SILENCIADO*
@@ -946,6 +998,13 @@ Ejemplo:
     delete silenciados[mencionado]
 
     guardarSilenciados()
+
+    registrarLog(
+    usuario,
+    "desilencio",
+    mencionado,
+    "Silencio removido"
+)
 
     await sock.sendMessage(chat, {
         text:
