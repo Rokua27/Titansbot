@@ -155,7 +155,7 @@ console.log(
     "cantidad:",
     contadorSpam[usuario].length
 )
-if (contadorSpam[usuario].length >= 3) {
+if (contadorSpam[usuario].length >= 15) {
 
     advertencias[usuario] = (advertencias[usuario] || 0) + 1
 
