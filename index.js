@@ -999,25 +999,26 @@ if (comando === "/anime") {
     try {
 
         const respuesta = await axios.get(
-            "https://api.catboys.com/img"
+            "https://nekos.best/api/v2/neko"
         )
 
-        await sock.sendMessage(chat, {
-            image: {
-                url: respuesta.data.url
-            },
-            caption:
-`🌸 *IMAGEN ANIME*
+        const imagen = respuesta.data.results[0].url
 
-🤖 TitansBot Oficial`
+        const buffer = await axios.get(imagen, {
+            responseType: "arraybuffer"
+        })
+
+        await sock.sendMessage(chat, {
+            image: Buffer.from(buffer.data),
+            caption: "🌸 Imagen anime aleatoria."
         })
 
     } catch (error) {
 
-        console.log(error)
+        console.log(error.message)
 
         await sock.sendMessage(chat, {
-            text: "❌ No fue posible obtener una imagen anime."
+            text: "❌ No se pudo obtener una imagen anime."
         })
     }
 }
@@ -1033,22 +1034,21 @@ if (comando === "/waifu") {
 
         const imagen = respuesta.data.images[0].url
 
-        await sock.sendMessage(chat, {
-            image: {
-                url: imagen
-            },
-            caption:
-`💖 *WAIFU TITANSBOT*
+        const buffer = await axios.get(imagen, {
+            responseType: "arraybuffer"
+        })
 
-🤖 TitansBot Oficial`
+        await sock.sendMessage(chat, {
+            image: Buffer.from(buffer.data),
+            caption: "💖 Waifu seleccionada por TitansBot."
         })
 
     } catch (error) {
 
-        console.log(error)
+        console.log(error.message)
 
         await sock.sendMessage(chat, {
-            text: "❌ No fue posible obtener una waifu."
+            text: "❌ No se pudo obtener una waifu."
         })
     }
 }
