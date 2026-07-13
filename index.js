@@ -162,6 +162,7 @@ if (chat.endsWith("@g.us")) {
                 ""
 
             const comando = texto.toLowerCase().trim()
+            const comandoBase = comando.split(" ")[0]
 // ==========================
    // SISTEMA ANTI-SPAM
 // ==========================
