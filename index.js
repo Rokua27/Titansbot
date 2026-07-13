@@ -999,7 +999,7 @@ if (comando === "/anime") {
     try {
 
         const response = await axios.get(
-            "https://api.waifu.pics/sfw/neko"
+            "https://nekos.best/api/v2/waifu"
         )
 
         const imagen = response.data.url
@@ -1035,7 +1035,7 @@ if (comando === "/waifu") {
     try {
 
         const response = await axios.get(
-            "https://api.waifu.pics/sfw/waifu"
+            "https://nekos.best/api/v2/waifu"
         )
 
         const imagen = response.data.url
