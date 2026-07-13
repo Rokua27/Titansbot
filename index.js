@@ -999,36 +999,32 @@ if (comando === "/anime") {
     try {
 
         const response = await axios.get(
-            "https://api.waifu.im/search?included_tags=maid",
-            {
-                headers: {
-                    Authorization: `Bearer ${process.env.WAIFU_API_KEY}`
-                }
-            }
+            "https://api.waifu.pics/sfw/neko"
         )
 
-        const imagen =
-            response.data.images[0].url
+        const imagen = response.data.url
 
         await sock.sendMessage(chat, {
             image: {
                 url: imagen
             },
             caption:
-`🌸 *IMAGEN ANIME*
+`🎌 *IMAGEN ANIME*
 
-🎌 Imagen obtenida correctamente.
+Solicitada por:
+@${usuario.split("@")[0]}
 
-🤖 TitansBot Oficial`
+🤖 TitansBot Oficial`,
+            mentions: [usuario]
         })
 
     } catch (error) {
 
-        console.log(error.response?.data || error.message)
+        console.log(error.message)
 
         await sock.sendMessage(chat, {
             text:
-`❌ No fue posible obtener una imagen anime.`
+"❌ No fue posible obtener una imagen anime."
         })
     }
 }
@@ -1038,34 +1034,33 @@ if (comando === "/waifu") {
 
     try {
 
-        console.log("===== PRUEBA WAIFU API =====")
-        console.log("API KEY:", process.env.WAIFU_API_KEY)
-
         const response = await axios.get(
-            "https://api.waifu.im/search?included_tags=waifu",
-            {
-                headers: {
-                    Authorization: `Bearer ${process.env.WAIFU_API_KEY}`
-                }
-            }
+            "https://api.waifu.pics/sfw/waifu"
         )
 
-        const imagen = response.data.images[0].url
+        const imagen = response.data.url
 
         await sock.sendMessage(chat, {
-            image: { url: imagen },
-            caption: "💖 Waifu aleatoria"
+            image: {
+                url: imagen
+            },
+            caption:
+`🌸 *WAIFU GENERADA*
+
+Solicitada por:
+@${usuario.split("@")[0]}
+
+🤖 TitansBot Oficial`,
+            mentions: [usuario]
         })
 
     } catch (error) {
 
-        console.log("===== ERROR WAIFU =====")
-        console.log("STATUS:", error.response?.status)
-        console.log("DATA:", error.response?.data)
-        console.log("MENSAJE:", error.message)
+        console.log(error.message)
 
         await sock.sendMessage(chat, {
-            text: "❌ No fue posible obtener una waifu."
+            text:
+"❌ No fue posible obtener una waifu."
         })
     }
 }
