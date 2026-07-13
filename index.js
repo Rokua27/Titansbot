@@ -686,6 +686,47 @@ if (comando === "/topactivos") {
     })
 }
 
+// /INACTIVOS
+if (comando === "/inactivos") {
+
+    if (!chat.endsWith("@g.us")) {
+        return await sock.sendMessage(chat, {
+            text: "❌ Este comando solo funciona en grupos."
+        })
+    }
+
+    const metadata = await sock.groupMetadata(chat)
+
+    const participantes = metadata.participants.map(
+        participante => participante.id
+    )
+
+    const ranking = participantes.map(id => ({
+        id,
+        mensajes: actividad[id]?.mensajes || 0
+    }))
+    .sort((a, b) => a.mensajes - b.mensajes)
+    .slice(0, 10)
+
+    let respuesta =
+`📉 *MIEMBROS MENOS ACTIVOS DEL GRUPO*
+
+`
+
+    ranking.forEach((miembro, index) => {
+        respuesta +=
+`${index + 1}. @${miembro.id.split("@")[0]}
+💬 ${miembro.mensajes} mensajes
+
+`
+    })
+
+    await sock.sendMessage(chat, {
+        text: respuesta,
+        mentions: ranking.map(x => x.id)
+    })
+}
+            
 // /PERFIL
 if (comando.startsWith("/perfil")) {
 
@@ -955,7 +996,151 @@ if (comandoBase === "/unmute") {
 Todos los miembros pueden volver a enviar mensajes.`
     })
 }
-                   
+
+// /DADO
+if (comando === "/dado") {
+
+    const resultado = Math.floor(Math.random() * 6) + 1
+
+    await sock.sendMessage(chat, {
+        text:
+`🎲 *LANZAMIENTO DE DADO*
+
+Resultado obtenido:
+
+🎯 ${resultado}`
+    })
+}
+
+// /MONEDA
+if (comando === "/moneda") {
+
+    const resultado =
+        Math.random() < 0.5
+            ? "🪙 Cara"
+            : "🪙 Sello"
+
+    await sock.sendMessage(chat, {
+        text:
+`🪙 *LANZAMIENTO DE MONEDA*
+
+Resultado:
+
+${resultado}`
+    })
+}
+
+// /8BALL
+if (comandoBase === "/8ball") {
+
+    const respuestas = [
+        "✅ Sí",
+        "❌ No",
+        "🤔 Tal vez",
+        "🔥 Definitivamente sí",
+        "⚠️ Mejor no",
+        "👀 Las probabilidades son buenas",
+        "😅 No parece probable",
+        "🏆 Todo apunta a que sí"
+    ]
+
+    const respuesta =
+        respuestas[
+            Math.floor(Math.random() * respuestas.length)
+        ]
+
+    await sock.sendMessage(chat, {
+        text:
+`🎱 *BOLA MÁGICA TITANS*
+
+${respuesta}`
+    })
+}
+
+// /QUIEN
+if (comandoBase === "/quien") {
+
+    if (!chat.endsWith("@g.us")) {
+        return await sock.sendMessage(chat, {
+            text: "❌ Este comando solo funciona en grupos."
+        })
+    }
+
+    const pregunta = texto.replace("/quien", "").trim()
+
+    if (!pregunta) {
+        return await sock.sendMessage(chat, {
+            text:
+`⚠️ Debes escribir una pregunta.
+
+Ejemplo:
+/quien será el MVP de la jornada`
+        })
+    }
+
+    const metadata = await sock.groupMetadata(chat)
+
+    const participantes = metadata.participants.map(
+        participante => participante.id
+    )
+
+    const elegido =
+        participantes[
+            Math.floor(
+                Math.random() * participantes.length
+            )
+        ]
+
+    await sock.sendMessage(chat, {
+        text:
+`🎲 *TITANSBOT HA DECIDIDO...*
+
+❓ ${pregunta}
+
+👑 El elegido es:
+
+@${elegido.split("@")[0]}
+
+🔥 La comunidad tendrá la última palabra.`,
+        mentions: [elegido]
+    })
+}
+
+// /SHIP
+if (comandoBase === "/ship") {
+
+    const mencionados =
+        mensaje.message.extendedTextMessage
+            ?.contextInfo
+            ?.mentionedJid || []
+
+    if (mencionados.length < 2) {
+        return await sock.sendMessage(chat, {
+            text:
+`⚠️ Debes mencionar dos usuarios.
+
+Ejemplo:
+/ship @usuario1 @usuario2`
+        })
+    }
+
+    const porcentaje =
+        Math.floor(Math.random() * 101)
+
+    await sock.sendMessage(chat, {
+        text:
+`💖 *COMPATIBILIDAD TITANSBOT*
+
+@${mencionados[0].split("@")[0]}
+❤️
+@${mencionados[1].split("@")[0]}
+
+📊 Compatibilidad:
+${porcentaje}%`,
+        mentions: mencionados
+    })
+}
+            
             // /MENU
             if (comando === "/menu") {
 
