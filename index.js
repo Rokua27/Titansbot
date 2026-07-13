@@ -8,6 +8,7 @@ const {
 } = require("@whiskeysockets/baileys")
 
 const pino = require("pino")
+const fs = require("fs")
 
 const PORT = process.env.PORT || 10000
 let qrImage = null
@@ -115,8 +116,20 @@ async function iniciarBot() {
     // ================= COMANDOS =================
 
     const contadorSpam = {}
-    const advertencias = {}
+    let advertencias = {}
+
+if (fs.existsSync("./advertencias.json")) {
+    advertencias = JSON.parse(
+        fs.readFileSync("./advertencias.json")
+    )
+}
     
+function guardarAdvertencias() {
+    fs.writeFileSync(
+        "./advertencias.json",
+        JSON.stringify(advertencias, null, 2)
+    )
+    }
     sock.ev.on("messages.upsert", async ({ messages }) => {
 
         try {
