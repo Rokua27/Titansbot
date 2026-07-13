@@ -158,6 +158,7 @@ async function iniciarBot() {
 📞 /contacto
 📆 /horarios
 🌐 /redes
+👑 /staff
 
 🔥 Próximamente:
 📊 /tabla
@@ -261,6 +262,34 @@ Comunidad competitiva de Mobile Legends.
 ✅ Noticias y anuncios oficiales
 
 👑 Gracias por formar parte de la comunidad Titans Team.`
+    })
+}
+
+    // /STAFF
+if (comando === "/staff") {
+    await sock.sendMessage(chat, {
+        text: `👑 *COMITÉ DIRECTIVO*
+🏆 *LIGA TITANS TEAM*
+
+👑 *Director General*
+• Jean Pierre Rousseau
+• David Rivera
+
+🏆 *Director de Torneos*
+• Juan Pablo López
+
+⚖️ *Director de Auditoría Interna*
+• Alfredo Pérez
+
+🎥 *Directora de Tecnología, Comunicación y Streaming*
+• Carol Juliana C
+
+🗂️ *Director de Asuntos Corporativos*
+• Alex Martínez
+
+⚔️ Trabajando juntos para fortalecer la comunidad y el crecimiento competitivo de Liga Titans Team.
+
+🔥 Gracias por formar parte de nuestra comunidad.`
     })
 }
             
