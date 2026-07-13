@@ -1440,29 +1440,113 @@ Todos los miembros pueden volver a enviar mensajes.`
             // /MENU
             if (comando === "/menu") {
 
-                await sock.sendMessage(chat, {
-                    text:
-`🏆 *TITANSBOT - LIGA TITANS TEAM* 🏆
+let menu = `
+╔════════════════════╗
+🏆  *T I T A N S B O T*
+⚔️ *Liga Titans Team*
+╚════════════════════╝
 
-📋 *Comandos disponibles*
+🤖 Estado: 🟢 En línea
+⚡ Versión: 1.0
+👑 Comunidad Oficial MLBB
+
+━━━━━━━━━━━━━━━━━━
+👥 *COMANDOS GENERALES*
+━━━━━━━━━━━━━━━━━━
 
 🏓 /ping
+🤖 /botinfo
 📜 /menu
+👤 /perfil
+📊 /topactivos
+📉 /inactivos
+
+━━━━━━━━━━━━━━━━━━
+🎵 *MULTIMEDIA*
+━━━━━━━━━━━━━━━━━━
+
+🎬 /video 🚧 en programación 🚧
+🎵 /ytmp3 🚧 en programación 🚧
+
+━━━━━━━━━━━━━━━━━━
+🎮 *DIVERSIÓN*
+━━━━━━━━━━━━━━━━━━
+
+🎲 /dado
+🪙 /moneda
+🎱 /8ball
+❓ /quien
+💖 /ship
+
+━━━━━━━━━━━━━━━━━━
+🖼️ *IMÁGENES*
+━━━━━━━━━━━━━━━━━━
+
+🐱 /gato
+🐶 /perro
+😂 /meme
+
+━━━━━━━━━━━━━━━━━━
+🏆 *LIGA TITANS TEAM*
+━━━━━━━━━━━━━━━━━━
+
 🏆 /liga
 📖 /reglas
-📞 /contacto
-📆 /horarios
+📅 /horarios
 🌐 /redes
 👑 /staff
 📞 /contacto
 🎥 /stream
 ❓ /ayuda
+`
 
-🔥 Próximamente:
-📊 /tabla
-📝 /inscripciones`
-                })
-            }
+if (esAdmin) {
+
+menu += `
+
+╔════════════════════╗
+🛡️ PANEL ADMINISTRADOR
+╚════════════════════╝
+
+📢 /tagall
+⚠️ /warn
+📊 /advertencias
+✅ /unwarn
+🧹 /clearwarn
+
+🔒 /cerrar
+🔓 /abrir
+
+📣 /anuncio
+📢 /anuncioall
+
+📅 /evento
+📊 /encuesta
+⏰ /recordatorio
+
+🔇 /mute
+🔊 /unmute
+🛡️ /admin
+`
+}
+
+menu += `
+
+━━━━━━━━━━━━━━━━━━
+👑 Director General
+Jean Pierre Rousseau
+David Rivera
+
+🤖 TitansBot Oficial
+🏆 Liga Titans Team
+━━━━━━━━━━━━━━━━━━
+`
+
+await sock.sendMessage(chat,{
+    text: menu
+})
+
+}
 
             // /LIGA
             if (comando === "/liga") {
