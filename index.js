@@ -370,6 +370,88 @@ ${historial.length}/5
         mentions: [mencionado]
     })
 }
+
+// /UNWARN
+if (comando.startsWith("/unwarn")) {
+
+    if (!esAdmin) {
+        return await sock.sendMessage(chat, {
+            text: "❌ Este comando es exclusivo para administradores."
+        })
+    }
+
+    const mencionado =
+        mensaje.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0]
+
+    if (!mencionado) {
+        return await sock.sendMessage(chat, {
+            text:
+            "⚠️ Debes mencionar un usuario.\n\nEjemplo:\n/unwarn @usuario"
+        })
+    }
+
+    if (!advertencias[mencionado] || advertencias[mencionado].length === 0) {
+        return await sock.sendMessage(chat, {
+            text:
+            `✅ @${mencionado.split("@")[0]} no tiene advertencias registradas.`,
+            mentions: [mencionado]
+        })
+    }
+
+    const eliminada = advertencias[mencionado].pop()
+
+    guardarAdvertencias()
+
+    await sock.sendMessage(chat, {
+        text:
+`✅ *ADVERTENCIA ELIMINADA*
+
+👤 Usuario:
+@${mencionado.split("@")[0]}
+
+📝 Advertencia eliminada:
+${eliminada.motivo}
+
+📊 Advertencias restantes:
+${advertencias[mencionado].length}/5`,
+        mentions: [mencionado]
+    })
+}
+
+// /CLEARWARN
+if (comando.startsWith("/clearwarn")) {
+
+    if (!esAdmin) {
+        return await sock.sendMessage(chat, {
+            text: "❌ Este comando es exclusivo para administradores."
+        })
+    }
+
+    const mencionado =
+        mensaje.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0]
+
+    if (!mencionado) {
+        return await sock.sendMessage(chat, {
+            text:
+            "⚠️ Debes mencionar un usuario.\n\nEjemplo:\n/clearwarn @usuario"
+        })
+    }
+
+    delete advertencias[mencionado]
+
+    guardarAdvertencias()
+
+    await sock.sendMessage(chat, {
+        text:
+`🧹 *HISTORIAL DISCIPLINARIO REINICIADO*
+
+👤 Usuario:
+@${mencionado.split("@")[0]}
+
+Todas las advertencias fueron eliminadas correctamente.`,
+        mentions: [mencionado]
+    })
+}
             
    // /CERRAR
 if (comando === "/cerrar") {
