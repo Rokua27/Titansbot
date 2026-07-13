@@ -126,6 +126,22 @@ async function iniciarBot() {
             if (!mensaje.message) return
             if (mensaje.key.fromMe) return
             const chat = mensaje.key.remoteJid
+            // ==========================
+            // VERIFICAR ADMINISTRADORES
+            // =========================
+            const usuario = mensaje.key.participant || mensaje.key.remoteJid
+
+let esAdmin = false
+
+if (chat.endsWith("@g.us")) {
+    const metadata = await sock.groupMetadata(chat)
+
+    const admins = metadata.participants
+        .filter(p => p.admin !== null)
+        .map(p => p.id)
+
+    esAdmin = admins.includes(usuario)
+}
             const texto =
                 mensaje.message.conversation ||
                 mensaje.message.extendedTextMessage?.text ||
@@ -187,7 +203,26 @@ Por favor evita enviar demasiados mensajes seguidos.`,
                     text: "🏓 Pong! TitansBot está funcionando correctamente."
                 })
             }
+            // /ADMIN
+            if (comando === "/admin") {
 
+                if (!esAdmin) {
+                     return await sock.sendMessage(chat, {
+                          text: "❌ Este comando es exclusivo para administradores."
+        })
+    }
+
+    await sock.sendMessage(chat, {
+        text:
+`🛡️ PANEL DE ADMINISTRACIÓN
+
+✅ Verificación correcta.
+
+👤 Usuario reconocido como administrador del grupo.
+
+TitansBot tiene permisos administrativos activos.`
+    })
+}
             // /MENU
             if (comando === "/menu") {
 
@@ -332,6 +367,9 @@ if (comando === "/staff") {
 
 🎥 *Directora de Tecnología, Comunicación y Streaming*
 • Carol Juliana C
+
+📽️ Sub Director de Tecnología, Comunicación y Moderador
+• Johan Andres Navarrete
 
 🗂️ *Director de Asuntos Corporativos*
 • Alex Martínez
