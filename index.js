@@ -262,6 +262,25 @@ if (comando === "/horarios") {
                 }
             }
 
+            // DESPEDIDA
+if (data.action === "remove") {
+
+    for (const participante of data.participants) {
+
+        await sock.sendMessage(data.id, {
+            text:
+`👋 *Un miembro ha abandonado la comunidad.*
+
+@${participante.split("@")[0]} ya no forma parte de *Liga Titans Team*.
+
+🏆 Gracias por haber compartido con nosotros y te deseamos éxitos en tus próximos proyectos.
+
+⚔️ Nos vemos en el campo de batalla.`,
+            mentions: [participante]
+        })
+    }
+}
+
         } catch (error) {
 
             console.log("Error en bienvenida:")
