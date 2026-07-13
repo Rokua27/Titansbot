@@ -11,6 +11,7 @@ const pino = require("pino")
 const fs = require("fs")
 
 const PORT = process.env.PORT || 10000
+const tiempoInicio = Date.now()
 let qrImage = null
 
 // ================= SERVIDOR HTTP =================
@@ -582,6 +583,41 @@ ${menciones}
 
 🤖 *TitansBot Oficial*`,
         mentions: participantes
+    })
+}
+
+// /BOTINFO
+if (comando === "/botinfo") {
+
+    const uptime = Date.now() - tiempoInicio
+
+    const horas = Math.floor(uptime / (1000 * 60 * 60))
+    const minutos = Math.floor((uptime % (1000 * 60 * 60)) / (1000 * 60))
+    const segundos = Math.floor((uptime % (1000 * 60)) / 1000)
+
+    const grupos = sock.chats?.all()?.filter(
+        chat => chat.id.endsWith("@g.us")
+    ).length || 0
+
+    await sock.sendMessage(chat, {
+        text:
+`🤖 *TITANSBOT OFICIAL*
+
+📌 Estado: En línea ✅
+⏱️ Tiempo activo: ${horas}h ${minutos}m ${segundos}s
+👥 Grupos administrados: ${grupos}
+
+🛡️ Anti-spam: Activo
+⚠️ Sistema disciplinario: Activo
+🎉 Bienvenida automática: Activa
+👋 Despedida automática: Activa
+
+🏆 *Liga Titans Team*
+👑 Director General:
+Jean Pierre Rousseau - David Rivera
+
+🚀 Versión:
+TitansBot v1.0`
     })
 }
             
