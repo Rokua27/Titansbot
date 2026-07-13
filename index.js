@@ -685,6 +685,45 @@ if (comando === "/topactivos") {
         mentions: ranking.map(x => x[0])
     })
 }
+
+// /PERFIL
+if (comando.startsWith("/perfil")) {
+
+    let objetivo = usuario
+
+    const mencionado =
+        mensaje.message.extendedTextMessage
+            ?.contextInfo
+            ?.mentionedJid?.[0]
+
+    if (mencionado) {
+        objetivo = mencionado
+    }
+
+    const datos = actividad[objetivo] || {
+        mensajes: 0
+    }
+
+    await sock.sendMessage(chat, {
+        text:
+`👤 *PERFIL DEL MIEMBRO*
+
+🆔 Usuario:
+@${objetivo.split("@")[0]}
+
+💬 Mensajes enviados:
+${datos.mensajes}
+
+🏆 Estado:
+${datos.mensajes >= 1000 ? "Veterano" :
+  datos.mensajes >= 500 ? "Activo" :
+  datos.mensajes >= 100 ? "Participativo" :
+  "Nuevo miembro"}
+
+🤖 TitansBot Oficial`,
+        mentions: [objetivo]
+    })
+}
             
 // /EVENTO
 if (comando.startsWith("/evento")) {
