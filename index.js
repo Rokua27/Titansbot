@@ -620,6 +620,125 @@ Jean Pierre Rousseau - David Rivera
 TitansBot v1.0`
     })
 }
+
+// /EVENTO
+if (comando.startsWith("/evento")) {
+
+    if (!esAdmin) {
+        return await sock.sendMessage(chat, {
+            text: "❌ Este comando es exclusivo para administradores."
+        })
+    }
+
+    const datos = texto.replace("/evento", "").trim()
+
+    if (!datos) {
+        return await sock.sendMessage(chat, {
+            text:
+`⚠️ Formato incorrecto.
+
+Ejemplo:
+/evento Gran Final | Nova E-sport vs Atlas E-sport | Domingo 8:30 PM | BO5`
+        })
+    }
+
+    const partes = datos.split("|").map(x => x.trim())
+
+    const nombreEvento = partes[0] || "No especificado"
+    const enfrentamiento = partes[1] || "No especificado"
+    const horario = partes[2] || "No especificado"
+    const formato = partes[3] || "No especificado"
+
+    await sock.sendMessage(chat, {
+        text:
+`╔════════════════════╗
+📅 *EVENTO OFICIAL*
+🏆 *LIGA TITANS TEAM*
+╚════════════════════╝
+
+🎮 *Evento:*
+${nombreEvento}
+
+⚔️ *Encuentro:*
+${enfrentamiento}
+
+🕒 *Horario:*
+${horario}
+
+🎯 *Formato:*
+${formato}
+
+━━━━━━━━━━━━━━━━━━━━
+🤖 *TitansBot Oficial*`
+    })
+}
+
+// /RECORDATORIO
+if (comandoBase === "/recordatorio") {
+
+    if (!esAdmin) {
+        return await sock.sendMessage(chat, {
+            text: "❌ Este comando es exclusivo para administradores."
+        })
+    }
+
+    const partes = texto.split(" ")
+
+    const minutos = parseInt(partes[1])
+
+    if (isNaN(minutos)) {
+        return await sock.sendMessage(chat, {
+            text:
+`⚠️ Formato incorrecto.
+
+Ejemplo:
+/recordatorio 30 La final comenzará en 30 minutos.`
+        })
+    }
+
+    const mensajeRecordatorio = partes.slice(2).join(" ")
+
+    if (!mensajeRecordatorio) {
+        return await sock.sendMessage(chat, {
+            text:
+`⚠️ Debes escribir el mensaje del recordatorio.
+
+Ejemplo:
+/recordatorio 30 La final comenzará en 30 minutos.`
+        })
+    }
+
+    await sock.sendMessage(chat, {
+        text:
+`⏰ *RECORDATORIO PROGRAMADO*
+
+🕒 Tiempo:
+${minutos} minutos
+
+📝 Mensaje:
+${mensajeRecordatorio}
+
+✅ TitansBot enviará el aviso automáticamente.`
+    })
+
+    setTimeout(async () => {
+
+        await sock.sendMessage(chat, {
+            text:
+`╔════════════════════╗
+⏰ *RECORDATORIO OFICIAL*
+🏆 *LIGA TITANS TEAM*
+╚════════════════════╝
+
+${mensajeRecordatorio}
+
+━━━━━━━━━━━━━━━━━━━━
+🤖 *TitansBot Oficial*`
+        })
+
+    }, minutos * 60 * 1000)
+}
+            
             
             // /MENU
             if (comando === "/menu") {
