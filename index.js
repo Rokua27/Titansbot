@@ -1002,9 +1002,8 @@ if (comando === "/anime") {
             "https://nekos.best/api/v2/neko",
             {
                 headers: {
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-                    "Accept": "application/json",
-                    "Referer": "https://nekos.best/"
+                    "User-Agent": "TitansBot/2.0 (contact: davidrr2710@icloud.com)",
+                    "Accept": "application/json"
                 }
             }
         )
@@ -1046,9 +1045,8 @@ if (comando === "/waifu") {
             "https://nekos.best/api/v2/waifu",
             {
                 headers: {
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-                    "Accept": "application/json",
-                    "Referer": "https://nekos.best/"
+                    "User-Agent": "TitansBot/2.0 (contact: davidrr2710@icloud.com)",
+                    "Accept": "application/json"
                 }
             }
         )
