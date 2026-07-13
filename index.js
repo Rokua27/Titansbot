@@ -151,7 +151,6 @@ if (chat.endsWith("@g.us")) {
 // ==========================
    // SISTEMA ANTI-SPAM
 // ==========================
-const usuario = mensaje.key.participant || mensaje.key.remoteJid
 console.log("Usuario:", usuario)
 console.log("Mensajes:", contadorSpam[usuario]?.length || 0)
 const ahora = Date.now()
