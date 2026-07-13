@@ -998,31 +998,37 @@ if (comando === "/anime") {
 
     try {
 
-        const respuesta = await axios.get(
-            "https://nekos.best/api/v2/neko",
+        const response = await axios.get(
+            "https://api.waifu.im/search?included_tags=maid",
             {
                 headers: {
-                    "User-Agent": "Mozilla/5.0"
+                    Authorization: `Bearer ${process.env.WAIFU_API_KEY}`
                 }
             }
         )
 
-        const imagen = respuesta.data.results[0].url
+        const imagen =
+            response.data.images[0].url
 
         await sock.sendMessage(chat, {
-            image: { url: imagen },
+            image: {
+                url: imagen
+            },
             caption:
 `🌸 *IMAGEN ANIME*
+
+🎌 Imagen obtenida correctamente.
 
 🤖 TitansBot Oficial`
         })
 
     } catch (error) {
 
-        console.log("ERROR ANIME:", error.message)
+        console.log(error.response?.data || error.message)
 
         await sock.sendMessage(chat, {
-            text: "❌ La API de anime rechazó la solicitud."
+            text:
+`❌ No fue posible obtener una imagen anime.`
         })
     }
 }
@@ -1032,31 +1038,39 @@ if (comando === "/waifu") {
 
     try {
 
-        const respuesta = await axios.get(
-            "https://api.nekosapi.com/v3/images/random",
+        const response = await axios.get(
+            "https://api.waifu.im/search?included_tags=waifu",
             {
                 headers: {
-                    "User-Agent": "Mozilla/5.0"
+                    Authorization: `Bearer ${process.env.WAIFU_API_KEY}`
                 }
             }
         )
 
-        const imagen = respuesta.data.items[0].image_url
+        const imagen =
+            response.data.images[0].url
 
         await sock.sendMessage(chat, {
-            image: { url: imagen },
+            image: {
+                url: imagen
+            },
             caption:
-`💖 *WAIFU TITANSBOT*
+`💖 *WAIFU ALEATORIA*
+
+🎀 Imagen obtenida correctamente desde Waifu.im
 
 🤖 TitansBot Oficial`
         })
 
     } catch (error) {
 
-        console.log("ERROR WAIFU:", error.message)
+        console.log(error.response?.data || error.message)
 
         await sock.sendMessage(chat, {
-            text: "❌ La API de waifus rechazó la solicitud."
+            text:
+`❌ No fue posible obtener una waifu en este momento.
+
+Intenta nuevamente en unos segundos.`
         })
     }
 }
