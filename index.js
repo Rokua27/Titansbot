@@ -159,6 +159,9 @@ async function iniciarBot() {
 📆 /horarios
 🌐 /redes
 👑 /staff
+📞 /contacto
+🎥 /stream
+❓ /ayuda
 
 🔥 Próximamente:
 📊 /tabla
@@ -290,6 +293,76 @@ if (comando === "/staff") {
 ⚔️ Trabajando juntos para fortalecer la comunidad y el crecimiento competitivo de Liga Titans Team.
 
 🔥 Gracias por formar parte de nuestra comunidad.`
+    })
+}
+
+    // /CONTACTO
+if (comando === "/contacto") {
+    await sock.sendMessage(chat, {
+        text:
+`📞 *CONTACTO OFICIAL - LIGA TITANS TEAM*
+
+👑 Dirección General
+[Nombre]
+
+🏆 Dirección de Torneos
+[Nombre]
+
+📧 Correo:
+[correo@ejemplo.com]
+
+📱 WhatsApp:
+[Numero de contacto]
+
+🌐 También puedes encontrarnos en nuestras redes oficiales usando:
+/redes`
+    })
+}
+
+     // /STREAM
+if (comando === "/stream") {
+    await sock.sendMessage(chat, {
+        text:
+`🎥 *TRANSMISIÓN OFICIAL*
+
+🏆 Evento:
+[Nombre del evento]
+
+📅 Fecha:
+[Fecha]
+
+🕒 Hora:
+[Hora]
+
+📺 Plataforma:
+[Facebook / YouTube / TikTok]
+
+🔗 Enlace:
+[Agregar enlace aquí]
+
+🔥 ¡No te pierdas la transmisión oficial de Liga Titans Team!`
+    })
+}
+
+    // /AYUDA
+if (comando === "/ayuda") {
+    await sock.sendMessage(chat, {
+        text:
+`❓ *CENTRO DE AYUDA TITANSBOT*
+
+Si necesitas información utiliza alguno de estos comandos:
+
+📜 /menu
+📅 /horarios
+👑 /staff
+🌐 /redes
+📖 /reglas
+📞 /contacto
+🎥 /stream
+
+🤖 Si tienes problemas o dudas adicionales contacta a la administración mediante:
+
+📞 /contacto`
     })
 }
             
