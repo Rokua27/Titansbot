@@ -299,7 +299,59 @@ console.log(
 if (contadorSpam[usuario].length >= 15) {
 
     advertencias[usuario] = (advertencias[usuario] || 0) + 1
+    guardar advertencias()
 
+// 5 advertencias = 5 minutos
+if (advertencias[usuario] === 5) {
+
+    silenciados[usuario] = {
+        hasta: Date.now() + (30 * 60 * 1000),
+        motivo: "Acumulación de 5 advertencias"
+    }
+
+    guardarSilenciados()
+
+    await sock.sendMessage(chat,{
+        text:
+`🔇 *SILENCIO AUTOMÁTICO*
+
+@${usuario.split("@")[0]}
+
+Has acumulado 5 advertencias.
+
+⏳ Duración:
+5 minutos
+
+🤖 TitansBot aplicó la sanción automáticamente.`,
+        mentions:[usuario]
+    })
+}
+
+// 10 advertencias = 1 horas
+if (advertencias[usuario] === 10) {
+
+    silenciados[usuario] = {
+        hasta: Date.now() + (24 * 60 * 60 * 1000),
+        motivo: "Acumulación de 5 advertencias"
+    }
+
+    guardarSilenciados()
+
+    await sock.sendMessage(chat,{
+        text:
+`🚨 *SANCIÓN AUTOMÁTICA*
+
+@${usuario.split("@")[0]}
+
+Has alcanzado el límite máximo de advertencias.
+
+🔇 Silencio aplicado:
+1 horas
+
+⚠️ La administración evaluará medidas adicionales.`,
+        mentions:[usuario]
+    })
+}
     await sock.sendMessage(chat, {
         text:
 `⚠️ *Advertencia automática*
@@ -309,25 +361,57 @@ if (contadorSpam[usuario].length >= 15) {
 Se detectó posible spam en el grupo.
 
 📊 Advertencias:
-${advertencias[usuario]}/5
+${advertencias[usuario]}/10
 
 Por favor evita enviar demasiados mensajes seguidos.`,
         mentions: [usuario]
     })
 
     contadorSpam[usuario] = []
-}         
+}    
+
+if (advertencias[usuario] >= 15) {
+
+    await sock.sendMessage(chat,{
+        text:
+`🚫 *USUARIO CRÍTICO*
+
+@${usuario.split("@")[0]}
+
+Ha superado las 15 advertencias.
+
+⚠️ Se recomienda a la administración evaluar expulsión del grupo.`,
+        mentions:[usuario]
+    })
+}
             
 // ==========================
 // SISTEMA DE SILENCIOS
 // ==========================
-if (
-    silenciados[usuario] &&
-    Date.now() < silenciados[usuario].hasta
-) {
+if (silenciados[usuario]) {
 
-    return await sock.sendMessage(chat,{
-        text:
+    // Si el castigo ya terminó
+    if (Date.now() >= silenciados[usuario].hasta) {
+
+        delete silenciados[usuario]
+
+        guardarSilenciados()
+
+        await sock.sendMessage(chat, {
+            text:
+`🔊 *SILENCIO FINALIZADO*
+
+👤 Usuario:
+@${usuario.split("@")[0]}
+
+✅ Ya puedes volver a participar en el grupo.`,
+            mentions: [usuario]
+        })
+
+    } else {
+
+        return await sock.sendMessage(chat,{
+            text:
 `🔇 Actualmente te encuentras silenciado por el staff.
 
 ⏳ Finaliza:
@@ -336,9 +420,11 @@ ${new Date(
 ).toLocaleString("es-CO")}
 
 📝 Motivo:
-${silenciados[usuario].motivo}`
-    })
-}
+${silenciados[usuario].motivo}`,
+            mentions: [usuario]
+        })
+    }
+} 
 
 // ==========================
 // COMANDOS
