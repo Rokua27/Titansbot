@@ -1043,7 +1043,9 @@ if (comando === "/waifu") {
     "https://nekos.best/api/v2/waifu",
     {
         headers: {
-            "User-Agent": "Mozilla/5.0"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+            "Accept": "application/json",
+            "Referer": "https://nekos.best/"
         }
     }
 )
