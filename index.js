@@ -114,6 +114,9 @@ async function iniciarBot() {
 
     // ================= COMANDOS =================
 
+    const contadorSpam = {}
+    const advertencias = {}
+    
     sock.ev.on("messages.upsert", async ({ messages }) => {
 
         try {
@@ -134,6 +137,43 @@ async function iniciarBot() {
 
             const chat = mensaje.key.remoteJid
 
+// ==========================
+   // SISTEMA ANTI-SPAM
+// ==========================
+const usuario = mensaje.key.participant || mensaje.key.remoteJid
+const ahora = Date.now()
+
+if (!contadorSpam[usuario]) {
+    contadorSpam[usuario] = []
+}
+
+contadorSpam[usuario] = contadorSpam[usuario].filter(
+    tiempo => ahora - tiempo < 10000
+)
+
+contadorSpam[usuario].push(ahora)
+
+if (contadorSpam[usuario].length >= 10) {
+
+    advertencias[usuario] = (advertencias[usuario] || 0) + 1
+
+    await sock.sendMessage(chat, {
+        text:
+`⚠️ *Advertencia automática*
+
+@${usuario.split("@")[0]}
+
+Se detectó posible spam en el grupo.
+
+📊 Advertencias:
+${advertencias[usuario]}/5
+
+Por favor evita enviar demasiados mensajes seguidos.`,
+        mentions: [usuario]
+    })
+
+    contadorSpam[usuario] = []
+}         
             // /PING
             if (comando === "/ping") {
 
