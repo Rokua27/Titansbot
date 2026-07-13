@@ -533,6 +533,58 @@ ${anuncio}
     })
 }
 
+// /ANUNCIOALL
+if (comando.startsWith("/anuncioall")) {
+
+    if (!esAdmin) {
+        return await sock.sendMessage(chat, {
+            text: "❌ Este comando es exclusivo para administradores."
+        })
+    }
+
+    const anuncio = texto.replace("/anuncioall", "").trim()
+
+    if (!anuncio) {
+        return await sock.sendMessage(chat, {
+            text:
+`⚠️ Debes escribir el contenido del anuncio.
+
+Ejemplo:
+/anuncioall La final comenzará a las 8:30 PM.`
+        })
+    }
+
+    const metadata = await sock.groupMetadata(chat)
+
+    const participantes = metadata.participants.map(
+        participante => participante.id
+    )
+
+    let menciones = ""
+
+    for (let participante of participantes) {
+        menciones += `@${participante.split("@")[0]}\n`
+    }
+
+    await sock.sendMessage(chat, {
+        text:
+`╔════════════════════╗
+📢 *ANUNCIO OFICIAL*
+🏆 *LIGA TITANS TEAM*
+╚════════════════════╝
+
+${anuncio}
+
+━━━━━━━━━━━━━━━━━━━━
+📣 *Notificación general enviada a todos los miembros.*
+
+${menciones}
+
+🤖 *TitansBot Oficial*`,
+        mentions: participantes
+    })
+}
+            
             // /MENU
             if (comando === "/menu") {
 
